@@ -5,6 +5,9 @@ import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.widget.EditText
+import com.example.user.whattodo.db.TodoDatabase
+import com.example.user.whattodo.db.TodoEntity
+import dagger.internal.DaggerCollections
 import kotlinx.android.synthetic.main.activity_main.*;
 import javax.inject.Inject
 
@@ -39,7 +42,7 @@ class MainActivity : AppCompatActivity() {
         alert.setPositiveButton("Add") {
             dialog, which ->
 
-            //database.todoDao().insertTodo(1, todoEditText.text.toString(), false)
+            database.todoDao().insertTodo(TodoEntity(todoEditText.text.toString(), false))
             TodoList.add(Todo(todoEditText.text.toString(), false))
             rv_todo_list.adapter.notifyDataSetChanged()
 

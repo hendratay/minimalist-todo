@@ -1,4 +1,4 @@
-package com.example.user.whattodo
+package com.example.user.whattodo.db
 
 import android.arch.persistence.room.Database
 import android.arch.persistence.room.RoomDatabase
