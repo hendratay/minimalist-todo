@@ -7,28 +7,32 @@ import android.support.v7.widget.LinearLayoutManager
 import android.widget.EditText
 import com.example.user.whattodo.db.TodoDatabase
 import com.example.user.whattodo.db.TodoEntity
-import dagger.internal.DaggerCollections
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*;
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var database : TodoDatabase
 
-    val TodoList = ArrayList<Todo>()
+    private var TodoList: MutableList<Todo> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        App.component.inject(this)
 
         fab_add_todo.setOnClickListener{
             addTodoDialog()
         }
 
         rv_todo_list.layoutManager = LinearLayoutManager(this)
-        rv_todo_list.adapter = TodoAdapter(TodoList);
 
+        refreshTodoRecycler()
     }
 
     fun addTodoDialog() {
@@ -43,8 +47,7 @@ class MainActivity : AppCompatActivity() {
             dialog, which ->
 
             database.todoDao().insertTodo(TodoEntity(todoEditText.text.toString(), false))
-            TodoList.add(Todo(todoEditText.text.toString(), false))
-            rv_todo_list.adapter.notifyDataSetChanged()
+            refreshTodoRecycler()
 
             dialog.dismiss()
         }
@@ -55,5 +58,23 @@ class MainActivity : AppCompatActivity() {
         }
 
         alert.show()
+    }
+
+    fun refreshTodoRecycler() {
+        database.todoDao().getAllTodo()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe{
+                    TodoList = convertEntityToTodo(it)
+                    rv_todo_list.adapter = TodoAdapter(TodoList)
+                }
+    }
+
+    fun convertEntityToTodo(list: List<TodoEntity>): MutableList<Todo> {
+        val newList: MutableList<Todo> = ArrayList()
+        list.forEach {
+            newList.add(Todo(it.todo, it.done))
+        }
+        return newList
     }
 }

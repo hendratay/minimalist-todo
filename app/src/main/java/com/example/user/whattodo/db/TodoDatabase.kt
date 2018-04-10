@@ -7,4 +7,5 @@ import android.arch.persistence.room.RoomDatabase
 abstract class TodoDatabase : RoomDatabase() {
 
     abstract fun todoDao() : TodoDao
+
 }

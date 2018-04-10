@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.todo_list_item.view.*;
 
-class TodoAdapter(val items : ArrayList<Todo>) : RecyclerView.Adapter<TodoAdapter.ViewHolder>() {
+class TodoAdapter(val items : List<Todo>) : RecyclerView.Adapter<TodoAdapter.ViewHolder>() {
 
     class ViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView) {
         val tvTodo = itemView.tv_todo

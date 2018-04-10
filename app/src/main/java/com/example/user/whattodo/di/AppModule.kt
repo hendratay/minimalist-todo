@@ -13,14 +13,11 @@ class AppModule(private val application : Application) {
 
     @Provides
     @Singleton
-    fun providesAppContext() = application
+    fun providesAppContext(): Context = application
 
     @Provides
     @Singleton
     fun providesAppDatabase(context : Context) : TodoDatabase =
-            Room.databaseBuilder(context, TodoDatabase::class.java, "todo.db").build()
-
-    @Provides
-    fun providesTodoDao(database : TodoDatabase) = database.todoDao()
+            Room.databaseBuilder(context, TodoDatabase::class.java, "todo.db").allowMainThreadQueries().build()
 
 }
