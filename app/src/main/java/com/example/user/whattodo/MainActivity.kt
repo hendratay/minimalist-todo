@@ -1,12 +1,16 @@
 package com.example.user.whattodo
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.EditText
 import com.example.user.whattodo.db.TodoDatabase
 import com.example.user.whattodo.db.TodoEntity
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*;
@@ -23,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        setSupportActionBar(tb_main)
 
         App.component.inject(this)
 
@@ -35,6 +40,22 @@ class MainActivity : AppCompatActivity() {
         refreshTodoRecycler()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?) = when (item?.itemId) {
+        R.id.action_done -> {
+            doneActivity()
+            true
+        }
+
+        else -> {
+            super.onOptionsItemSelected(item)
+        }
+    }
+
     fun addTodoDialog() {
         val alert = AlertDialog.Builder(this)
         val todoEditText = EditText(this)
@@ -44,7 +65,7 @@ class MainActivity : AppCompatActivity() {
         alert.setView(todoEditText)
 
         alert.setPositiveButton("Add") {
-            dialog, which ->
+            dialog, _ ->
 
             database.todoDao().insertTodo(TodoEntity(todoEditText.text.toString(), false))
             refreshTodoRecycler()
@@ -52,7 +73,7 @@ class MainActivity : AppCompatActivity() {
             dialog.dismiss()
         }
         alert.setNegativeButton("Cancel") {
-            dialog, which ->
+            dialog, _ ->
 
             dialog.dismiss()
         }
@@ -61,20 +82,39 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun refreshTodoRecycler() {
-        database.todoDao().getAllTodo()
+        database.todoDao().getTodo()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe{
                     TodoList = convertEntityToTodo(it)
-                    rv_todo_list.adapter = TodoAdapter(TodoList)
+                    rv_todo_list.adapter = TodoAdapter(TodoList, ::onItemChecked)
                 }
+    }
+
+    fun onItemChecked(todo: Todo) {
+        TodoList.remove(todo)
+        rv_todo_list.adapter = TodoAdapter(TodoList, ::onItemChecked)
+        moveTodoToDone(todo)
+    }
+
+    fun moveTodoToDone(todo: Todo) {
+        val entity = TodoEntity(todo.todoId, todo.todoText, true)
+        Single.fromCallable { database.todoDao().updateTodo(entity) }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe()
     }
 
     fun convertEntityToTodo(list: List<TodoEntity>): MutableList<Todo> {
         val newList: MutableList<Todo> = ArrayList()
         list.forEach {
-            newList.add(Todo(it.todo, it.done))
+            newList.add(Todo(it.id, it.todo, it.done))
         }
         return newList
+    }
+
+    fun doneActivity() {
+        val intent = Intent(this, DoneActivity::class.java)
+        startActivity(intent)
     }
 }

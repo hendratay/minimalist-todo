@@ -6,13 +6,16 @@ import io.reactivex.Flowable
 @Dao
 interface TodoDao {
 
-    @Query("select * from todo")
-    fun getAllTodo() : Flowable<List<TodoEntity>>
+    @Query("select * from todo where done = 0")
+    fun getTodo() : Flowable<List<TodoEntity>>
+
+    @Query("select * from todo where done = 1")
+    fun getDoneTodo() : Flowable<List<TodoEntity>>
 
     @Insert
     fun insertTodo(todo : TodoEntity)
 
-    @Update
+    @Update(onConflict = OnConflictStrategy.REPLACE)
     fun updateTodo(todo : TodoEntity)
 
     @Delete
