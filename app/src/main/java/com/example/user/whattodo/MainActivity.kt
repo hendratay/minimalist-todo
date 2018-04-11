@@ -3,6 +3,7 @@ package com.example.user.whattodo
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
@@ -41,7 +42,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main_menu, menu)
+        menuInflater.inflate(R.menu.menu_main, menu)
         return true
     }
 
@@ -87,14 +88,15 @@ class MainActivity : AppCompatActivity() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe{
                     TodoList = convertEntityToTodo(it)
-                    rv_todo_list.adapter = TodoAdapter(TodoList, ::onItemChecked)
+                    rv_todo_list.adapter = TodoAdapter(TodoList, ::onItemChecked, ::deleteTodo)
                 }
     }
 
     fun onItemChecked(todo: Todo) {
         TodoList.remove(todo)
-        rv_todo_list.adapter = TodoAdapter(TodoList, ::onItemChecked)
+        rv_todo_list.adapter = TodoAdapter(TodoList, ::onItemChecked, ::deleteTodo)
         moveTodoToDone(todo)
+        Snackbar.make(cl_main, todo.todoText + " have done", Snackbar.LENGTH_SHORT).show()
     }
 
     fun moveTodoToDone(todo: Todo) {
@@ -111,6 +113,15 @@ class MainActivity : AppCompatActivity() {
             newList.add(Todo(it.id, it.todo, it.done))
         }
         return newList
+    }
+
+    fun deleteTodo(todo: Todo) {
+        val entity = TodoEntity(todo.todoId, todo.todoText, todo.done)
+        Single.fromCallable { database.todoDao().deleteTodo(entity) }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe()
+        Snackbar.make(cl_main, todo.todoText + " have deleted", Snackbar.LENGTH_SHORT).show()
     }
 
     fun doneActivity() {
