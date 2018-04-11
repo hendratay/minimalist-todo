@@ -19,7 +19,6 @@ class DoneActivity : AppCompatActivity() {
     @Inject
     lateinit var database: TodoDatabase
 
-    private lateinit var adapter: TodoAdapter
     private var TodoList: MutableList<Todo> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,8 +29,7 @@ class DoneActivity : AppCompatActivity() {
         App.component.inject(this)
 
         rv_done_list.layoutManager = LinearLayoutManager(this)
-        adapter = TodoAdapter(TodoList, null, ::deleteTodo)
-        rv_done_list.adapter = adapter
+        rv_done_list.adapter = TodoAdapter(TodoList, ::onItemChecked, ::deleteTodo)
 
         refreshTodoRecycler()
     }
@@ -60,8 +58,23 @@ class DoneActivity : AppCompatActivity() {
                     it.forEach {
                         TodoList.add(Todo(it.id, it.todo, it.done))
                     }
-                    adapter.notifyDataSetChanged()
+                    rv_done_list.adapter = TodoAdapter(TodoList, ::onItemChecked, ::deleteTodo)
                 }
+    }
+
+    fun onItemChecked(todo: Todo) {
+        TodoList.remove(todo)
+        rv_done_list.adapter = TodoAdapter(TodoList, ::onItemChecked, ::deleteTodo)
+        moveTodoToUndone(todo)
+        Snackbar.make(ll_main, todo.todoText + " have not done yet", Snackbar.LENGTH_SHORT).show()
+    }
+
+    fun moveTodoToUndone(todo: Todo) {
+        val entity = TodoEntity(todo.todoId, todo.todoText, false)
+        Single.fromCallable { database.todoDao().updateTodo(entity) }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe()
     }
 
     fun deleteTodo(todo: Todo) {
@@ -82,7 +95,7 @@ class DoneActivity : AppCompatActivity() {
                     .subscribe()
         }
         TodoList.clear()
-        adapter.notifyDataSetChanged()
+        rv_done_list.adapter = TodoAdapter(TodoList, ::onItemChecked, ::deleteTodo)
         Snackbar.make(ll_main, "You have delete all done Todo", Snackbar.LENGTH_SHORT).show()
     }
 
