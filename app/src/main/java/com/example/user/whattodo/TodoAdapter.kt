@@ -9,7 +9,7 @@ import kotlinx.android.synthetic.main.todo_list_item.view.*;
 
 class TodoAdapter(val items : MutableList<Todo>,
                   val changeListener: ((Todo) -> Unit)?,
-                  val deleteTodoListener: ((Todo) -> Unit)?) : RecyclerView.Adapter<TodoAdapter.ViewHolder>() {
+                  val deleteTodoListener: ((List<Todo>) -> Unit)?) : RecyclerView.Adapter<TodoAdapter.ViewHolder>() {
 
     private var multiSelect: Boolean = false
     private var selectedItems: ArrayList<Todo> = ArrayList()
@@ -28,8 +28,8 @@ class TodoAdapter(val items : MutableList<Todo>,
         override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
             for(todo: Todo in selectedItems) {
                 items.remove(todo)
-                deleteTodoListener?.invoke(todo)
             }
+            deleteTodoListener?.invoke(selectedItems)
             mode?.finish()
             return true
         }
@@ -49,19 +49,19 @@ class TodoAdapter(val items : MutableList<Todo>,
             if(multiSelect) {
                 if (selectedItems.contains(item)) {
                     selectedItems.remove(item)
-                    tvTodo.setBackgroundColor(Color.WHITE)
+                    itemView.setBackgroundColor(Color.TRANSPARENT)
                 } else {
                     selectedItems.add(item)
-                    tvTodo.setBackgroundColor(Color.LTGRAY)
+                    itemView.setBackgroundColor(Color.LTGRAY)
                 }
             }
         }
 
         fun update(value: Todo) {
             if(selectedItems.contains(value)) {
-                tvTodo.setBackgroundColor(Color.LTGRAY)
+                itemView.setBackgroundColor(Color.LTGRAY)
             } else {
-                tvTodo.setBackgroundColor(Color.WHITE)
+                itemView.setBackgroundColor(Color.TRANSPARENT)
             }
             itemView.setOnLongClickListener {
                 var activity = it.context as AppCompatActivity
