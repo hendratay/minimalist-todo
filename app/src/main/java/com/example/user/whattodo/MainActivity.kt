@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -17,36 +16,46 @@ import com.example.user.whattodo.db.TodoEntity
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_done.*
 import kotlinx.android.synthetic.main.activity_main.*;
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
 
-    @Inject
-    lateinit var database : TodoDatabase
+    @Inject lateinit var database : TodoDatabase
     private lateinit var adapter: TodoAdapter
-
     private var TodoList: MutableList<Todo> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setSupportActionBar(tb_main)
-        tb_main.setBackgroundColor(Color.WHITE)
 
         App.component.inject(this)
 
-        fab_add_todo.setOnClickListener{
-            addTodoDialog()
-        }
+        setupNavigation()
+        //setupRecyclerView()
+        //getTodo()
+    }
 
+    private fun setupNavigation() {
+        view_pager.adapter = PagerAdapter(supportFragmentManager, this)
+        tab_layout.setupWithViewPager(view_pager)
+        setupTab()
+    }
+
+    private fun setupTab() {
+        tab_layout.apply {
+            setSelectedTabIndicatorColor(Color.TRANSPARENT)
+            getTabAt(0)?.setIcon(R.drawable.selector_task)
+            getTabAt(1)?.setIcon(R.drawable.selector_reminder)
+            getTabAt(2)?.setIcon(R.drawable.selector_grocery)
+        }
+    }
+
+    private fun setupRecyclerView() {
         rv_todo_list.layoutManager = LinearLayoutManager(this)
         adapter = TodoAdapter(TodoList, { todo: Todo -> onItemChecked(todo)}, { todoList: List<Todo> -> deleteTodo(todoList)})
         rv_todo_list.adapter = adapter
-
-        refreshTodoRecycler()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -78,7 +87,7 @@ class MainActivity : AppCompatActivity() {
             dialog, _ ->
 
             database.todoDao().insertTodo(TodoEntity(todoEditText.text.toString(), false))
-            refreshTodoRecycler()
+            getTodo()
 
             dialog.dismiss()
         }
@@ -91,7 +100,7 @@ class MainActivity : AppCompatActivity() {
         alert.show()
     }
 
-    fun refreshTodoRecycler() {
+    fun getTodo() {
         database.todoDao().getTodo()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -138,7 +147,7 @@ class MainActivity : AppCompatActivity() {
         snackbar.setAction("UNDO", View.OnClickListener {
             backup.forEach {
                 database.todoDao().insertTodo(it)
-                refreshTodoRecycler()
+                getTodo()
             }
         } )
     }
