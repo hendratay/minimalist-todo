@@ -1,3 +1,5 @@
 package com.example.user.whattodo.model
 
-data class Todo(var todoId: Long, var todoText : String, var done : Boolean)
+import java.util.*
+
+data class Todo(val todoId: Long, val todoText : String, val done : Boolean, val type: String, val date: Date?)

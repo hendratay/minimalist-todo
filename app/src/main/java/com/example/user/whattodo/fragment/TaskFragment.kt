@@ -1,9 +1,9 @@
 package com.example.user.whattodo.fragment
 
-import android.app.AlertDialog
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -37,7 +37,6 @@ class TaskFragment: Fragment() {
     }
 
     private fun setupButtonAdd() {
-        button_add_task.text = "Add Task"
         button_add_task.setOnClickListener {
             addTodoDialog()
         }
@@ -56,7 +55,7 @@ class TaskFragment: Fragment() {
                 .subscribe{
                     todoList.clear()
                     for (todo: TodoEntity in it) {
-                        todoList.add(Todo(todo.id, todo.todo, todo.done))
+                        todoList.add(Todo(todo.id, todo.todo, todo.done, todo.type, todo.dateTime))
                     }
                     // For fixing java.lang.IndexOutOfBoundsException: Inconsistency detected
                     rv_task.recycledViewPool.clear()
@@ -74,7 +73,7 @@ class TaskFragment: Fragment() {
     }
 
     private fun moveTodoToDone(todo: Todo) {
-        val entity = TodoEntity(todo.todoId, todo.todoText, true)
+        val entity = TodoEntity(todo.todoId, todo.todoText, true, todo.type, todo.date)
         Single.fromCallable { (activity as MainActivity).database.todoDao().updateTodo(entity) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -82,7 +81,7 @@ class TaskFragment: Fragment() {
     }
 
     fun moveTodoToUndone(todo: Todo) {
-        val entity = TodoEntity(todo.todoId, todo.todoText, false)
+        val entity = TodoEntity(todo.todoId, todo.todoText, false, todo.type, todo.date)
         Single.fromCallable { (activity as MainActivity).database.todoDao().updateTodo(entity) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -92,7 +91,7 @@ class TaskFragment: Fragment() {
     private fun deleteTodo(list: List<Todo>) {
         val backup: MutableList<TodoEntity> = ArrayList()
         list.forEach {
-            val entity = TodoEntity(it.todoId, it.todoText, it.done)
+            val entity = TodoEntity(it.todoId, it.todoText, it.done, it.type, it.date)
             backup.add(entity)
             Single.fromCallable { (activity as MainActivity).database.todoDao().deleteTodo(entity) }
                     .subscribeOn(Schedulers.io())
@@ -111,7 +110,7 @@ class TaskFragment: Fragment() {
     }
 
     private fun addTodoDialog() {
-        val alert = AlertDialog.Builder(activity)
+        val alert = AlertDialog.Builder(activity as MainActivity)
         val todoEditText = EditText(activity)
         todoEditText.hint = "Enter Todo"
 
@@ -120,7 +119,7 @@ class TaskFragment: Fragment() {
         alert.setView(todoEditText)
 
         alert.setPositiveButton("Add") { dialog, _ ->
-            (activity as MainActivity).database.todoDao().insertTodo(TodoEntity(todoEditText.text.toString(), false))
+            (activity as MainActivity).database.todoDao().insertTodo(TodoEntity(todoEditText.text.toString(), false, "Task", null))
             getTodo()
             dialog.dismiss()
         }
