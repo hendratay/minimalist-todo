@@ -15,10 +15,10 @@
     <TextView
         android:id="@+id/tv_todo"
         tools:text="Create an app"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="10"
-        android:padding="18dp" />
-
+        android:layout_weight="9" />
 
 </LinearLayout>

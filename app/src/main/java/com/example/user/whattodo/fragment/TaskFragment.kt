@@ -2,6 +2,7 @@ package com.example.user.whattodo.fragment
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
@@ -88,9 +89,9 @@ class TaskFragment: Fragment() {
                 .subscribe()
     }
 
-    private fun deleteTodo(todoList: List<Todo>) {
+    private fun deleteTodo(list: List<Todo>) {
         val backup: MutableList<TodoEntity> = ArrayList()
-        todoList.forEach {
+        list.forEach {
             val entity = TodoEntity(it.todoId, it.todoText, it.done)
             backup.add(entity)
             Single.fromCallable { (activity as MainActivity).database.todoDao().deleteTodo(entity) }
@@ -98,14 +99,15 @@ class TaskFragment: Fragment() {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe()
         }
-/*        val snackBar = Snackbar.make(cl_main, todoList.size.toString() + " item deleted", Snackbar.LENGTH_SHORT)
+        todoList.clear(); getTodo(); adapter.notifyDataSetChanged()
+        val snackBar = Snackbar.make(cl_task, "${list.size} item deleted", Snackbar.LENGTH_SHORT)
         snackBar.show()
         snackBar.setAction("UNDO") {
             backup.forEach {
                 (activity as MainActivity).database.todoDao().insertTodo(it)
                 getTodo()
             }
-        }*/
+        }
     }
 
     private fun addTodoDialog() {
