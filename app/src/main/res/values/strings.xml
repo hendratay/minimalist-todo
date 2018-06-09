@@ -3,4 +3,5 @@
     <string name="add_task">Add Task</string>
     <string name="add_reminder">Add Reminder</string>
     <string name="remind_me_about">Remind me about...</string>
+    <string name="add_grocery">Add Grocery</string>
 </resources>

@@ -24,7 +24,7 @@ import java.util.*
 class ReminderFragment: Fragment() {
 
     private lateinit var adapter: TodoAdapter
-    private var todoList: MutableList<Todo> = ArrayList()
+    private var reminderList: MutableList<Todo> = ArrayList()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_reminder, container, false)
@@ -46,7 +46,7 @@ class ReminderFragment: Fragment() {
 
     private fun setupRecyclerView() {
         rv_reminder.layoutManager = LinearLayoutManager(activity as MainActivity)
-        adapter = TodoAdapter(todoList, null, null)
+        adapter = TodoAdapter(reminderList, null, null)
         rv_reminder.adapter = adapter
     }
 
@@ -86,13 +86,13 @@ class ReminderFragment: Fragment() {
     }
 
     private fun getReminder() {
-        (activity as MainActivity).database.todoDao().getTodo()
+        (activity as MainActivity).database.todoDao().getTodo("Reminder")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    todoList.clear()
+                    reminderList.clear()
                     for (todo: TodoEntity in it) {
-                        todoList.add(Todo(todo.id, todo.todo, todo.done, todo.type, todo.dateTime))
+                        reminderList.add(Todo(todo.id, todo.todo, todo.done, todo.type, todo.dateTime))
                     }
                     // For fixing java.lang.IndexOutOfBoundsException: Inconsistency detected
                     rv_reminder.recycledViewPool.clear()

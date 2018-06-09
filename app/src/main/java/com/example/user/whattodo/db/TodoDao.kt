@@ -6,11 +6,8 @@ import io.reactivex.Flowable
 @Dao
 interface TodoDao {
 
-    @Query("select * from todo")
-    fun getTodo() : Flowable<List<TodoEntity>>
-
-/*    @Query("select * from todo where done = 1")
-    fun getDoneTodo() : Flowable<List<TodoEntity>>*/
+    @Query("select * from todo where type == :type ")
+    fun getTodo(type: String) : Flowable<List<TodoEntity>>
 
     @Insert
     fun insertTodo(todo : TodoEntity)

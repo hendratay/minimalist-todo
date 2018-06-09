@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.fragment_task.*
 class TaskFragment: Fragment() {
 
     private lateinit var adapter: TodoAdapter
-    private var todoList: MutableList<Todo> = ArrayList()
+    private var taskList: MutableList<Todo> = ArrayList()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_task,container, false)
@@ -33,7 +33,7 @@ class TaskFragment: Fragment() {
 
         setupButtonAdd()
         setupRecyclerView()
-        getTodo()
+        getTask()
     }
 
     private fun setupButtonAdd() {
@@ -44,19 +44,20 @@ class TaskFragment: Fragment() {
 
     private fun setupRecyclerView() {
         rv_task.layoutManager = LinearLayoutManager(activity as MainActivity)
-        adapter = TodoAdapter(todoList, { todo: Todo -> onItemChecked(todo) }, { todoList: List<Todo> -> deleteTodo(todoList) })
+        adapter = TodoAdapter(taskList, { todo: Todo -> onItemChecked(todo) }, { todoList: List<Todo> -> deleteTodo(todoList) })
         rv_task.adapter = adapter
     }
 
-    private fun getTodo() {
-        (activity as MainActivity).database.todoDao().getTodo()
+    private fun getTask() {
+        (activity as MainActivity).database.todoDao().getTodo("Task")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe{
-                    todoList.clear()
+                    taskList.clear()
                     for (todo: TodoEntity in it) {
-                        todoList.add(Todo(todo.id, todo.todo, todo.done, todo.type, todo.dateTime))
+                        taskList.add(Todo(todo.id, todo.todo, todo.done, todo.type, todo.dateTime))
                     }
+                    // Todo: Fix rv_task null
                     // For fixing java.lang.IndexOutOfBoundsException: Inconsistency detected
                     rv_task.recycledViewPool.clear()
                     adapter.notifyDataSetChanged()
@@ -66,8 +67,8 @@ class TaskFragment: Fragment() {
     private fun onItemChecked(todo: Todo) {
         if(!rv_task.isComputingLayout) {
             if(todo.done) moveTodoToUndone(todo) else moveTodoToDone(todo)
-            todoList.clear()
-            getTodo()
+            taskList.clear()
+            getTask()
             adapter.notifyDataSetChanged()
         }
     }
@@ -80,7 +81,7 @@ class TaskFragment: Fragment() {
                 .subscribe()
     }
 
-    fun moveTodoToUndone(todo: Todo) {
+    private fun moveTodoToUndone(todo: Todo) {
         val entity = TodoEntity(todo.todoId, todo.todoText, false, todo.type, todo.date)
         Single.fromCallable { (activity as MainActivity).database.todoDao().updateTodo(entity) }
                 .subscribeOn(Schedulers.io())
@@ -98,13 +99,13 @@ class TaskFragment: Fragment() {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe()
         }
-        todoList.clear(); getTodo(); adapter.notifyDataSetChanged()
+        taskList.clear(); getTask(); adapter.notifyDataSetChanged()
         val snackBar = Snackbar.make(cl_task, "${list.size} item deleted", Snackbar.LENGTH_SHORT)
         snackBar.show()
         snackBar.setAction("UNDO") {
             backup.forEach {
                 (activity as MainActivity).database.todoDao().insertTodo(it)
-                getTodo()
+                getTask()
             }
         }
     }
@@ -120,7 +121,7 @@ class TaskFragment: Fragment() {
 
         alert.setPositiveButton("Add") { dialog, _ ->
             (activity as MainActivity).database.todoDao().insertTodo(TodoEntity(todoEditText.text.toString(), false, "Task", null))
-            getTodo()
+            getTask()
             dialog.dismiss()
         }
         alert.setNegativeButton("Cancel") { dialog, _ ->

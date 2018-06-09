@@ -91,7 +91,7 @@ class TodoAdapter(val items : MutableList<Todo>,
         holder.tvTodo.text = todo.todoText
         holder.cbTodo.isChecked = todo.done
         holder.update(todo)
-        holder.cbTodo.setOnCheckedChangeListener{ buttonView, isChecked ->
+        holder.cbTodo.setOnCheckedChangeListener{ _, isChecked ->
             changeListener?.invoke(todo)
         }
     }

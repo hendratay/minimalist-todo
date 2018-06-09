@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupNavigation() {
-        view_pager.adapter = PagerAdapter(supportFragmentManager, this)
+        view_pager.adapter = PagerAdapter(supportFragmentManager)
         tab_layout.setupWithViewPager(view_pager)
         setupTab()
     }

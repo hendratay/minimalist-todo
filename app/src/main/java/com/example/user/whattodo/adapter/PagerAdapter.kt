@@ -8,7 +8,7 @@ import com.example.user.whattodo.fragment.GroceryFragment
 import com.example.user.whattodo.fragment.ReminderFragment
 import com.example.user.whattodo.fragment.TaskFragment
 
-class PagerAdapter(fm: FragmentManager, context: Context): FragmentPagerAdapter(fm) {
+class PagerAdapter(fm: FragmentManager): FragmentPagerAdapter(fm) {
 
     override fun getCount(): Int {
         return 3
