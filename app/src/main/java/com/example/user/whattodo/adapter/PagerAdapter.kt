@@ -1,9 +1,12 @@
-package com.example.user.whattodo
+package com.example.user.whattodo.adapter
 
 import android.content.Context
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
+import com.example.user.whattodo.fragment.GroceryFragment
+import com.example.user.whattodo.fragment.ReminderFragment
+import com.example.user.whattodo.fragment.TaskFragment
 
 class PagerAdapter(fm: FragmentManager, context: Context): FragmentPagerAdapter(fm) {
 

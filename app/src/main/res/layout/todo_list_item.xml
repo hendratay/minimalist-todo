@@ -6,18 +6,19 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal" >
 
-    <TextView
-        android:id="@+id/tv_todo"
-        tools:text="Create an app"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="9"
-        android:padding="18dp" />
-
     <CheckBox
         android:id="@+id/cb_todo"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/tv_todo"
+        tools:text="Create an app"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="10"
+        android:padding="18dp" />
+
 
 </LinearLayout>

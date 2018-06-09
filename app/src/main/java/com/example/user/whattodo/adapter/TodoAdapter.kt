@@ -1,10 +1,13 @@
-package com.example.user.whattodo
+package com.example.user.whattodo.adapter
 
 import android.graphics.Color
+import android.graphics.Paint
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.view.ActionMode
 import android.support.v7.widget.RecyclerView
 import android.view.*
+import com.example.user.whattodo.R
+import com.example.user.whattodo.model.Todo
 import kotlinx.android.synthetic.main.todo_list_item.view.*;
 
 class TodoAdapter(val items : MutableList<Todo>,
@@ -81,6 +84,10 @@ class TodoAdapter(val items : MutableList<Todo>,
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val todo = items.get(position)
+        if(todo.done) {
+            holder.tvTodo.text = todo.todoText
+            holder.tvTodo.paintFlags = (Paint.STRIKE_THRU_TEXT_FLAG)
+        }
         holder.tvTodo.text = todo.todoText
         holder.cbTodo.isChecked = todo.done
         holder.update(todo)
