@@ -8,14 +8,14 @@ import android.support.v7.widget.RecyclerView
 import android.view.*
 import com.example.user.whattodo.R
 import com.example.user.whattodo.model.Todo
-import kotlinx.android.synthetic.main.todo_list_item.view.*;
+import kotlinx.android.synthetic.main.todo_list_item.view.*
 
 class TodoAdapter(val items : MutableList<Todo>,
-                  val changeListener: ((Todo) -> Unit)?,
-                  val deleteTodoListener: ((List<Todo>) -> Unit)?) : RecyclerView.Adapter<TodoAdapter.ViewHolder>() {
+                  private val changeListener: ((Todo) -> Unit)?,
+                  val deleteTodoListener: ((List<Int>) -> Unit)?) : RecyclerView.Adapter<TodoAdapter.ViewHolder>() {
 
     private var multiSelect: Boolean = false
-    private var selectedItems: ArrayList<Todo> = ArrayList()
+    private var selectedItems: HashMap<Int, Todo> = hashMapOf()
 
     private var actionModeCallbacks: ActionMode.Callback = object: ActionMode.Callback {
         override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
@@ -29,10 +29,7 @@ class TodoAdapter(val items : MutableList<Todo>,
         }
 
         override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
-            for(todo: Todo in selectedItems) {
-                items.remove(todo)
-            }
-            deleteTodoListener?.invoke(selectedItems)
+            deleteTodoListener?.invoke(selectedItems.keys.toList())
             mode?.finish()
             return true
         }
@@ -45,30 +42,42 @@ class TodoAdapter(val items : MutableList<Todo>,
     }
 
     inner class ViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView) {
-        val tvTodo = itemView.tv_todo
-        val cbTodo = itemView.cb_todo
 
-        fun selectItem(item: Todo) {
+        fun bind(todo: Todo, changeListener: ((Todo) -> Unit)?) {
+            itemView.cb_todo.isChecked = todo.done
+            if(todo.done) {
+                itemView.tv_todo.text = todo.todoText
+                itemView.tv_todo.paintFlags = (Paint.STRIKE_THRU_TEXT_FLAG)
+            } else {
+                itemView.tv_todo.text = todo.todoText
+                itemView.tv_todo.paintFlags = 0
+            }
+            itemView.cb_todo.setOnCheckedChangeListener { _, _ ->
+                changeListener?.invoke(todo)
+            }
+            update(adapterPosition)
+        }
+
+        private fun selectItem(item: Int) {
             if(multiSelect) {
-                if (selectedItems.contains(item)) {
+                if (selectedItems.containsKey(item)) {
                     selectedItems.remove(item)
                     itemView.setBackgroundColor(Color.TRANSPARENT)
                 } else {
-                    selectedItems.add(item)
+                    selectedItems[item] = items[item]
                     itemView.setBackgroundColor(Color.LTGRAY)
                 }
             }
         }
 
-        fun update(value: Todo) {
-            if(selectedItems.contains(value)) {
+        private fun update(value: Int) {
+            if(selectedItems.containsKey(value)) {
                 itemView.setBackgroundColor(Color.LTGRAY)
             } else {
                 itemView.setBackgroundColor(Color.TRANSPARENT)
             }
             itemView.setOnLongClickListener {
-                var activity = it.context as AppCompatActivity
-                activity.startSupportActionMode(actionModeCallbacks)
+                (it.context as AppCompatActivity).startSupportActionMode(actionModeCallbacks)
                 selectItem(value)
                 true
             }
@@ -83,17 +92,7 @@ class TodoAdapter(val items : MutableList<Todo>,
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val todo = items.get(position)
-        if(todo.done) {
-            holder.tvTodo.text = todo.todoText
-            holder.tvTodo.paintFlags = (Paint.STRIKE_THRU_TEXT_FLAG)
-        }
-        holder.tvTodo.text = todo.todoText
-        holder.cbTodo.isChecked = todo.done
-        holder.update(todo)
-        holder.cbTodo.setOnCheckedChangeListener{ _, isChecked ->
-            changeListener?.invoke(todo)
-        }
+        holder.bind(items[position], changeListener)
     }
 
     override fun getItemCount() = items.size

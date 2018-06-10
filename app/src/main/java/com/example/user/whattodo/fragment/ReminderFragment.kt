@@ -94,8 +94,6 @@ class ReminderFragment: Fragment() {
                     for (todo: TodoEntity in it) {
                         reminderList.add(Todo(todo.id, todo.todo, todo.done, todo.type, todo.dateTime))
                     }
-                    // For fixing java.lang.IndexOutOfBoundsException: Inconsistency detected
-                    rv_reminder.recycledViewPool.clear()
                     adapter.notifyDataSetChanged()
                 }
     }

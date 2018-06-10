@@ -76,8 +76,6 @@ class GroceryFragment: Fragment() {
                     for (todo: TodoEntity in it) {
                         groceryList.add(Todo(todo.id, todo.todo, todo.done, todo.type, todo.dateTime))
                     }
-                    // For fixing java.lang.IndexOutOfBoundsException: Inconsistency detected
-                    rv_grocery.recycledViewPool.clear()
                     adapter.notifyDataSetChanged()
                 }
     }

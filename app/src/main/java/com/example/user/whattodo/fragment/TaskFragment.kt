@@ -44,7 +44,7 @@ class TaskFragment: Fragment() {
 
     private fun setupRecyclerView() {
         rv_task.layoutManager = LinearLayoutManager(activity as MainActivity)
-        adapter = TodoAdapter(taskList, { todo: Todo -> onItemChecked(todo) }, { todoList: List<Todo> -> deleteTodo(todoList) })
+        adapter = TodoAdapter(taskList, { todo: Todo -> onItemChecked(todo) }, { todoList: List<Int> -> deleteTodo(todoList) })
         rv_task.adapter = adapter
     }
 
@@ -57,9 +57,6 @@ class TaskFragment: Fragment() {
                     for (todo: TodoEntity in it) {
                         taskList.add(Todo(todo.id, todo.todo, todo.done, todo.type, todo.dateTime))
                     }
-                    // Todo: Fix rv_task null
-                    // For fixing java.lang.IndexOutOfBoundsException: Inconsistency detected
-                    rv_task.recycledViewPool.clear()
                     adapter.notifyDataSetChanged()
                 }
     }
@@ -67,9 +64,6 @@ class TaskFragment: Fragment() {
     private fun onItemChecked(todo: Todo) {
         if(!rv_task.isComputingLayout) {
             if(todo.done) moveTodoToUndone(todo) else moveTodoToDone(todo)
-            taskList.clear()
-            getTask()
-            adapter.notifyDataSetChanged()
         }
     }
 
@@ -89,10 +83,10 @@ class TaskFragment: Fragment() {
                 .subscribe()
     }
 
-    private fun deleteTodo(list: List<Todo>) {
+    private fun deleteTodo(list: List<Int>) {
         val backup: MutableList<TodoEntity> = ArrayList()
         list.forEach {
-            val entity = TodoEntity(it.todoId, it.todoText, it.done, it.type, it.date)
+            val entity = TodoEntity(taskList[it].todoId, taskList[it].todoText, taskList[it].done, taskList[it].type, taskList[it].date)
             backup.add(entity)
             Single.fromCallable { (activity as MainActivity).database.todoDao().deleteTodo(entity) }
                     .subscribeOn(Schedulers.io())
