@@ -10,9 +10,9 @@ import com.example.user.whattodo.R
 import com.example.user.whattodo.model.Todo
 import kotlinx.android.synthetic.main.todo_list_item.view.*
 
-class TodoAdapter(val items : MutableList<Todo>,
+class TaskAdapter(val items : MutableList<Todo>,
                   private val changeListener: ((Todo) -> Unit)?,
-                  val deleteTodoListener: ((List<Int>) -> Unit)?) : RecyclerView.Adapter<TodoAdapter.ViewHolder>() {
+                  val deleteTodoListener: ((List<Int>) -> Unit)?) : RecyclerView.Adapter<TaskAdapter.ViewHolder>() {
 
     private var multiSelect: Boolean = false
     private var selectedItems: HashMap<Int, Todo> = hashMapOf()

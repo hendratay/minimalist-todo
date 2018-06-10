@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import com.example.user.whattodo.MainActivity
 import com.example.user.whattodo.R
-import com.example.user.whattodo.adapter.TodoAdapter
+import com.example.user.whattodo.adapter.TaskAdapter
 import com.example.user.whattodo.db.TodoEntity
 import com.example.user.whattodo.model.Todo
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.fragment_grocery.*
 
 class GroceryFragment: Fragment() {
 
-    private lateinit var adapter: TodoAdapter
+    private lateinit var adapter: TaskAdapter
     private var groceryList: MutableList<Todo> = ArrayList()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -42,7 +42,7 @@ class GroceryFragment: Fragment() {
 
     private fun setupRecyclerView() {
         rv_grocery.layoutManager = LinearLayoutManager(activity as MainActivity)
-        adapter = TodoAdapter(groceryList, null, null)
+        adapter = TaskAdapter(groceryList, null, null)
         rv_grocery.adapter = adapter
     }
 

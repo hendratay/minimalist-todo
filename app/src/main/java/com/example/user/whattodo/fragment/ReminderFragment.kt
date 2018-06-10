@@ -11,7 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.user.whattodo.MainActivity
 import com.example.user.whattodo.R
-import com.example.user.whattodo.adapter.TodoAdapter
+import com.example.user.whattodo.adapter.TaskAdapter
 import com.example.user.whattodo.db.TodoEntity
 import com.example.user.whattodo.model.Todo
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -23,7 +23,7 @@ import java.util.*
 
 class ReminderFragment: Fragment() {
 
-    private lateinit var adapter: TodoAdapter
+    private lateinit var adapter: TaskAdapter
     private var reminderList: MutableList<Todo> = ArrayList()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -46,7 +46,7 @@ class ReminderFragment: Fragment() {
 
     private fun setupRecyclerView() {
         rv_reminder.layoutManager = LinearLayoutManager(activity as MainActivity)
-        adapter = TodoAdapter(reminderList, null, null)
+        adapter = TaskAdapter(reminderList, null, null)
         rv_reminder.adapter = adapter
     }
 
