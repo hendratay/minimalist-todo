@@ -5,12 +5,11 @@ import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.BottomSheetDialog
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
-import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
+import com.example.user.whattodo.utils.HeaderDecoration
 import com.example.user.whattodo.MainActivity
 import com.example.user.whattodo.R
 import com.example.user.whattodo.model.Todo
@@ -21,6 +20,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.bottom_sheet.*
 import kotlinx.android.synthetic.main.fragment_task.*
+import kotlinx.android.synthetic.main.header_item.*
+import kotlinx.android.synthetic.main.header_item.view.*
 
 class TaskFragment: Fragment() {
 
@@ -58,6 +59,7 @@ class TaskFragment: Fragment() {
 
     private fun setupRecyclerView() {
         rv_task.layoutManager = LinearLayoutManager(activity as MainActivity)
+        rv_task.addItemDecoration(HeaderDecoration(activity as MainActivity, rv_task, R.layout.header_item, "Task"))
         adapter = TaskAdapter(taskList, { todo: Todo -> onItemChecked(todo) }, { todoList: List<Int> -> deleteTodo(todoList) })
         rv_task.adapter = adapter
     }
