@@ -7,13 +7,13 @@
     android:orientation="horizontal" >
 
     <CheckBox
-        android:id="@+id/cb_todo"
+        android:id="@+id/check_box_task"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1" />
 
     <TextView
-        android:id="@+id/tv_todo"
+        android:id="@+id/text_view_task"
         tools:text="Create an app"
         android:paddingTop="16dp"
         android:paddingBottom="16dp"

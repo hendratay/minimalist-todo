@@ -11,9 +11,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.user.whattodo.MainActivity
 import com.example.user.whattodo.R
-import com.example.user.whattodo.adapter.TaskAdapter
+import com.example.user.whattodo.adapter.ReminderAdapter
 import com.example.user.whattodo.db.TodoEntity
 import com.example.user.whattodo.model.Todo
+import com.example.user.whattodo.utils.HeaderDecoration
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.dialog_add_reminder.view.*
@@ -23,7 +24,7 @@ import java.util.*
 
 class ReminderFragment: Fragment() {
 
-    private lateinit var adapter: TaskAdapter
+    private lateinit var adapter: ReminderAdapter
     private var reminderList: MutableList<Todo> = ArrayList()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -46,7 +47,8 @@ class ReminderFragment: Fragment() {
 
     private fun setupRecyclerView() {
         rv_reminder.layoutManager = LinearLayoutManager(activity as MainActivity)
-        adapter = TaskAdapter(reminderList, null, null)
+        rv_reminder.addItemDecoration(HeaderDecoration((activity as MainActivity), rv_reminder, R.layout.header_item, "Remind Me"))
+        adapter = ReminderAdapter(reminderList)
         rv_reminder.adapter = adapter
     }
 

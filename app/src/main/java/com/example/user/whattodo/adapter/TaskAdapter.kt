@@ -8,7 +8,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.*
 import com.example.user.whattodo.R
 import com.example.user.whattodo.model.Todo
-import kotlinx.android.synthetic.main.todo_list_item.view.*
+import kotlinx.android.synthetic.main.task_list_item.view.*
 
 class TaskAdapter(val items : MutableList<Todo>,
                   private val changeListener: ((Todo) -> Unit)?,
@@ -44,15 +44,15 @@ class TaskAdapter(val items : MutableList<Todo>,
     inner class ViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(todo: Todo, changeListener: ((Todo) -> Unit)?) {
-            itemView.cb_todo.isChecked = todo.done
+            itemView.check_box_task.isChecked = todo.done
             if(todo.done) {
-                itemView.tv_todo.text = todo.todoText
-                itemView.tv_todo.paintFlags = (Paint.STRIKE_THRU_TEXT_FLAG)
+                itemView.text_view_task.text = todo.todoText
+                itemView.text_view_task.paintFlags = (Paint.STRIKE_THRU_TEXT_FLAG)
             } else {
-                itemView.tv_todo.text = todo.todoText
-                itemView.tv_todo.paintFlags = 0
+                itemView.text_view_task.text = todo.todoText
+                itemView.text_view_task.paintFlags = 0
             }
-            itemView.cb_todo.setOnCheckedChangeListener { _, _ ->
+            itemView.check_box_task.setOnCheckedChangeListener { _, _ ->
                 changeListener?.invoke(todo)
             }
             update(adapterPosition)
@@ -88,7 +88,7 @@ class TaskAdapter(val items : MutableList<Todo>,
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.todo_list_item, parent, false))
+        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.task_list_item, parent, false))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
