@@ -14,6 +14,7 @@ class TaskAdapter(val items : MutableList<Todo>,
                   private val changeListener: ((Todo) -> Unit)?,
                   val deleteTodoListener: ((List<Int>) -> Unit)?) : RecyclerView.Adapter<TaskAdapter.ViewHolder>() {
 
+    private var actionMode: ActionMode? = null
     private var multiSelect: Boolean = false
     private var selectedItems: HashMap<Int, Todo> = hashMapOf()
 
@@ -35,6 +36,7 @@ class TaskAdapter(val items : MutableList<Todo>,
         }
 
         override fun onDestroyActionMode(mode: ActionMode?) {
+            actionMode = null
             multiSelect = false
             selectedItems.clear()
             notifyDataSetChanged()
@@ -77,12 +79,12 @@ class TaskAdapter(val items : MutableList<Todo>,
                 itemView.setBackgroundColor(Color.TRANSPARENT)
             }
             itemView.setOnLongClickListener {
-                (it.context as AppCompatActivity).startSupportActionMode(actionModeCallbacks)
+                actionMode = (it.context as AppCompatActivity).startSupportActionMode(actionModeCallbacks)
                 selectItem(value)
                 true
             }
             itemView.setOnClickListener {
-                selectItem(value)
+                if(actionMode == null) itemView.check_box_task.isChecked = !itemView.check_box_task.isChecked else selectItem(value)
             }
         }
     }

@@ -2,6 +2,7 @@ package com.example.user.whattodo.fragment
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
@@ -14,6 +15,7 @@ import com.example.user.whattodo.adapter.GroceryAdapter
 import com.example.user.whattodo.db.TodoEntity
 import com.example.user.whattodo.model.Todo
 import com.example.user.whattodo.utils.HeaderDecoration
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_grocery.*
@@ -44,7 +46,7 @@ class GroceryFragment: Fragment() {
     private fun setupRecyclerView() {
         rv_grocery.layoutManager = LinearLayoutManager(activity as MainActivity)
         rv_grocery.addItemDecoration(HeaderDecoration(activity as MainActivity, rv_grocery, R.layout.header_item, "Shopping List"))
-        adapter = GroceryAdapter(groceryList)
+        adapter = GroceryAdapter(groceryList, { onItemChecked(it) }, { deleteTodo(it) })
         rv_grocery.adapter = adapter
     }
 
@@ -80,6 +82,49 @@ class GroceryFragment: Fragment() {
                     }
                     adapter.notifyDataSetChanged()
                 }
+    }
+
+    private fun onItemChecked(todo: Todo) {
+        if(!rv_grocery.isComputingLayout) {
+            if(todo.done) moveTodoToUndone(todo) else moveTodoToDone(todo)
+        }
+    }
+
+    private fun moveTodoToDone(todo: Todo) {
+        val entity = TodoEntity(todo.todoId, todo.todoText, true, todo.type, todo.date)
+        Single.fromCallable { (activity as MainActivity).database.todoDao().updateTodo(entity) }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe()
+    }
+
+    private fun moveTodoToUndone(todo: Todo) {
+        val entity = TodoEntity(todo.todoId, todo.todoText, false, todo.type, todo.date)
+        Single.fromCallable { (activity as MainActivity).database.todoDao().updateTodo(entity) }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe()
+    }
+
+    private fun deleteTodo(list: List<Int>) {
+        val backup: MutableList<TodoEntity> = ArrayList()
+        list.forEach {
+            val entity = TodoEntity(groceryList[it].todoId, groceryList[it].todoText, groceryList[it].done, groceryList[it].type, groceryList[it].date)
+            backup.add(entity)
+            Single.fromCallable { (activity as MainActivity).database.todoDao().deleteTodo(entity) }
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe()
+        }
+        groceryList.clear(); getGrocery(); adapter.notifyDataSetChanged()
+        val snackBar = Snackbar.make(cl_grocery, "${list.size} item deleted", Snackbar.LENGTH_SHORT)
+        snackBar.show()
+        snackBar.setAction("UNDO") {
+            backup.forEach {
+                (activity as MainActivity).database.todoDao().insertTodo(it)
+                getGrocery()
+            }
+        }
     }
 
 }

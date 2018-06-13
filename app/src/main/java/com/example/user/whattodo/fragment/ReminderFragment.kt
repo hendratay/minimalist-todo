@@ -3,6 +3,7 @@ package com.example.user.whattodo.fragment
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
@@ -15,6 +16,7 @@ import com.example.user.whattodo.adapter.ReminderAdapter
 import com.example.user.whattodo.db.TodoEntity
 import com.example.user.whattodo.model.Todo
 import com.example.user.whattodo.utils.HeaderDecoration
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.dialog_add_reminder.view.*
@@ -48,7 +50,7 @@ class ReminderFragment: Fragment() {
     private fun setupRecyclerView() {
         rv_reminder.layoutManager = LinearLayoutManager(activity as MainActivity)
         rv_reminder.addItemDecoration(HeaderDecoration((activity as MainActivity), rv_reminder, R.layout.header_item, "Remind Me"))
-        adapter = ReminderAdapter(reminderList)
+        adapter = ReminderAdapter(reminderList, { onItemChecked(it) }, { deleteTodo(it) })
         rv_reminder.adapter = adapter
     }
 
@@ -98,6 +100,49 @@ class ReminderFragment: Fragment() {
                     }
                     adapter.notifyDataSetChanged()
                 }
+    }
+
+    private fun onItemChecked(todo: Todo) {
+        if(!rv_reminder.isComputingLayout) {
+            if(todo.done) moveTodoToUndone(todo) else moveTodoToDone(todo)
+        }
+    }
+
+    private fun moveTodoToDone(todo: Todo) {
+        val entity = TodoEntity(todo.todoId, todo.todoText, true, todo.type, todo.date)
+        Single.fromCallable { (activity as MainActivity).database.todoDao().updateTodo(entity) }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe()
+    }
+
+    private fun moveTodoToUndone(todo: Todo) {
+        val entity = TodoEntity(todo.todoId, todo.todoText, false, todo.type, todo.date)
+        Single.fromCallable { (activity as MainActivity).database.todoDao().updateTodo(entity) }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe()
+    }
+
+    private fun deleteTodo(list: List<Int>) {
+        val backup: MutableList<TodoEntity> = ArrayList()
+        list.forEach {
+            val entity = TodoEntity(reminderList[it].todoId, reminderList[it].todoText, reminderList[it].done, reminderList[it].type, reminderList[it].date)
+            backup.add(entity)
+            Single.fromCallable { (activity as MainActivity).database.todoDao().deleteTodo(entity) }
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe()
+        }
+        reminderList.clear(); getReminder(); adapter.notifyDataSetChanged()
+        val snackBar = Snackbar.make(cl_reminder, "${list.size} item deleted", Snackbar.LENGTH_SHORT)
+        snackBar.show()
+        snackBar.setAction("UNDO") {
+            backup.forEach {
+                (activity as MainActivity).database.todoDao().insertTodo(it)
+                getReminder()
+            }
+        }
     }
 
 }
