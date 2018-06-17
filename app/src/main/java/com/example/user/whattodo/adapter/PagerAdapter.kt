@@ -1,6 +1,5 @@
 package com.example.user.whattodo.adapter
 
-import android.content.Context
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
@@ -22,6 +21,15 @@ class PagerAdapter(fm: FragmentManager): FragmentPagerAdapter(fm) {
             2 -> fragment = GroceryFragment()
         }
         return fragment
+    }
+
+    override fun getPageTitle(position: Int): CharSequence? {
+        return when(position) {
+            0 -> "Task"
+            1 -> "Reminder"
+            2 -> "Grocery"
+            else -> ""
+        }
     }
 
 }

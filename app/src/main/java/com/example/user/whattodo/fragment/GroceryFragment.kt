@@ -1,56 +1,26 @@
 package com.example.user.whattodo.fragment
 
 import android.app.AlertDialog
-import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.EditText
 import com.example.user.whattodo.MainActivity
-import com.example.user.whattodo.R
 import com.example.user.whattodo.adapter.GroceryAdapter
 import com.example.user.whattodo.db.TodoEntity
 import com.example.user.whattodo.model.Todo
-import com.example.user.whattodo.utils.HeaderDecoration
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fragment_grocery.*
+import kotlinx.android.synthetic.main.fragment_todo.*
 
-class GroceryFragment: Fragment() {
+class GroceryFragment: TodoFragment() {
 
     private lateinit var adapter: GroceryAdapter
     private var groceryList: MutableList<Todo> = ArrayList()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_grocery, container, false)
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        setupButtonAdd()
-        setupRecyclerView()
+    override fun onStart() {
+        super.onStart()
         getGrocery()
     }
 
-    private fun setupButtonAdd() {
-        button_add_grocery.setOnClickListener {
-            addGroceryDialog()
-        }
-    }
-
-    private fun setupRecyclerView() {
-        rv_grocery.layoutManager = LinearLayoutManager(activity as MainActivity)
-        rv_grocery.addItemDecoration(HeaderDecoration(activity as MainActivity, rv_grocery, R.layout.header_item, "Shopping List"))
-        adapter = GroceryAdapter(groceryList, { onItemChecked(it) }, { deleteTodo(it) })
-        rv_grocery.adapter = adapter
-    }
-
-    private fun addGroceryDialog() {
+    override fun addTodoDialog() {
         val alert = AlertDialog.Builder(activity as MainActivity)
         val groceryEditText = EditText(activity)
         groceryEditText.hint = "Enter Groceries"
@@ -60,7 +30,7 @@ class GroceryFragment: Fragment() {
         alert.setView(groceryEditText)
 
         alert.setPositiveButton("Add") { dialog, _ ->
-            (activity as MainActivity).database.todoDao().insertTodo(TodoEntity(groceryEditText.text.toString(), false, "Grocery", null))
+            insertTodo(TodoEntity(groceryEditText.text.toString(), false, "Grocery", null))
             getGrocery()
             dialog.dismiss()
         }
@@ -71,59 +41,35 @@ class GroceryFragment: Fragment() {
         alert.show()
     }
 
+    override fun setupRecyclerView() {
+        recycler_view.layoutManager = LinearLayoutManager(activity)
+        adapter = GroceryAdapter(groceryList, { onItemChecked(it) }, { onItemDeleted(it) })
+        recycler_view.adapter = adapter
+    }
+
     private fun getGrocery() {
-        (activity as MainActivity).database.todoDao().getTodo("Grocery")
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+        getTodo("Grocery")
                 .subscribe {
                     groceryList.clear()
-                    for (todo: TodoEntity in it) {
-                        groceryList.add(Todo(todo.id, todo.todo, todo.done, todo.type, todo.dateTime))
-                    }
+                    it.forEach { groceryList.add(Todo(it.id, it.todo, it.done, it.type, it.dateTime)) }
                     adapter.notifyDataSetChanged()
                 }
     }
 
     private fun onItemChecked(todo: Todo) {
-        if(!rv_grocery.isComputingLayout) {
-            if(todo.done) moveTodoToUndone(todo) else moveTodoToDone(todo)
+        if(!recycler_view.isComputingLayout) {
+            if(todo.done) updateTodo(todo, false) else updateTodo(todo, true)
         }
     }
 
-    private fun moveTodoToDone(todo: Todo) {
-        val entity = TodoEntity(todo.todoId, todo.todoText, true, todo.type, todo.date)
-        Single.fromCallable { (activity as MainActivity).database.todoDao().updateTodo(entity) }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe()
-    }
-
-    private fun moveTodoToUndone(todo: Todo) {
-        val entity = TodoEntity(todo.todoId, todo.todoText, false, todo.type, todo.date)
-        Single.fromCallable { (activity as MainActivity).database.todoDao().updateTodo(entity) }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe()
-    }
-
-    private fun deleteTodo(list: List<Int>) {
-        val backup: MutableList<TodoEntity> = ArrayList()
-        list.forEach {
-            val entity = TodoEntity(groceryList[it].todoId, groceryList[it].todoText, groceryList[it].done, groceryList[it].type, groceryList[it].date)
-            backup.add(entity)
-            Single.fromCallable { (activity as MainActivity).database.todoDao().deleteTodo(entity) }
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe()
-        }
-        groceryList.clear(); getGrocery(); adapter.notifyDataSetChanged()
-        val snackBar = Snackbar.make(cl_grocery, "${list.size} item deleted", Snackbar.LENGTH_SHORT)
+    private fun onItemDeleted(selected: List<Int>) {
+        deleteTodo(selected, groceryList)
+        getGrocery()
+        val snackBar = Snackbar.make(coordinator_layout, "${selected.size} item deleted", Snackbar.LENGTH_SHORT)
         snackBar.show()
         snackBar.setAction("UNDO") {
-            backup.forEach {
-                (activity as MainActivity).database.todoDao().insertTodo(it)
-                getGrocery()
-            }
+            undoDeleteTodo()
+            getGrocery()
         }
     }
 
