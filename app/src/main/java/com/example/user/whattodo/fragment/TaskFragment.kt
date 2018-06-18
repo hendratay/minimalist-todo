@@ -1,14 +1,14 @@
 package com.example.user.whattodo.fragment
 
-import android.support.design.widget.BottomSheetDialog
 import android.support.design.widget.Snackbar
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import com.example.user.whattodo.MainActivity
 import com.example.user.whattodo.R
 import com.example.user.whattodo.model.Todo
 import com.example.user.whattodo.adapter.TaskAdapter
 import com.example.user.whattodo.db.TodoEntity
-import kotlinx.android.synthetic.main.bottom_sheet.*
+import kotlinx.android.synthetic.main.dialog_add_task.view.*
 import kotlinx.android.synthetic.main.fragment_todo.*
 
 class TaskFragment: TodoFragment() {
@@ -22,16 +22,15 @@ class TaskFragment: TodoFragment() {
     }
 
     override fun addTodoDialog() {
-        val bottomSheet = layoutInflater.inflate(R.layout.bottom_sheet, null)
-        val dialog = BottomSheetDialog(activity as MainActivity)
-        dialog.setContentView(bottomSheet)
-        dialog.button_save_task.setOnClickListener {
-            if(dialog.edit_text_task.text.isNotBlank()) {
-                insertTodo(TodoEntity(dialog.edit_text_task.text.toString(), false, "Task", null))
-                getTask()
-            }
-            dialog.hide()
-        }
+        val dialog = AlertDialog.Builder(activity as MainActivity)
+        val view = (activity as MainActivity).layoutInflater.inflate(R.layout.dialog_add_task, null)
+        dialog.setView(view)
+                .setPositiveButton("Add") { _, _ ->
+                    insertTodo(TodoEntity(view.edit_text_task.text.toString(), false, "Task", null))
+                }
+                .setNegativeButton("Cancel") {dialog, _ ->
+                    dialog.dismiss()
+                }
         dialog.show()
     }
 

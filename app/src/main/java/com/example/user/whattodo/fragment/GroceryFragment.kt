@@ -1,13 +1,14 @@
 package com.example.user.whattodo.fragment
 
-import android.app.AlertDialog
 import android.support.design.widget.Snackbar
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
-import android.widget.EditText
 import com.example.user.whattodo.MainActivity
+import com.example.user.whattodo.R
 import com.example.user.whattodo.adapter.GroceryAdapter
 import com.example.user.whattodo.db.TodoEntity
 import com.example.user.whattodo.model.Todo
+import kotlinx.android.synthetic.main.dialog_add_grocery.view.*
 import kotlinx.android.synthetic.main.fragment_todo.*
 
 class GroceryFragment: TodoFragment() {
@@ -21,24 +22,16 @@ class GroceryFragment: TodoFragment() {
     }
 
     override fun addTodoDialog() {
-        val alert = AlertDialog.Builder(activity as MainActivity)
-        val groceryEditText = EditText(activity)
-        groceryEditText.hint = "Enter Groceries"
-
-        alert.setTitle("Add New Grocery")
-        // TODO: Use custom layout
-        alert.setView(groceryEditText)
-
-        alert.setPositiveButton("Add") { dialog, _ ->
-            insertTodo(TodoEntity(groceryEditText.text.toString(), false, "Grocery", null))
-            getGrocery()
-            dialog.dismiss()
-        }
-        alert.setNegativeButton("Cancel") { dialog, _ ->
-            dialog.dismiss()
-        }
-
-        alert.show()
+        val dialog = AlertDialog.Builder(activity as MainActivity)
+        val view = (activity as MainActivity).layoutInflater.inflate(R.layout.dialog_add_grocery, null)
+        dialog.setView(view)
+                .setPositiveButton("Add") { _, _ ->
+                    insertTodo(TodoEntity(view.edit_text_grocery.text.toString(), false, "Grocery", null))
+                }
+                .setNegativeButton("Cancel") {dialog, _ ->
+                    dialog.dismiss()
+                }
+        dialog.show()
     }
 
     override fun setupRecyclerView() {

@@ -26,38 +26,34 @@ class ReminderFragment: TodoFragment() {
     }
 
     override fun addTodoDialog() {
-        val alert = AlertDialog.Builder(activity as MainActivity)
         val now = Calendar.getInstance()
         val year = now.get(Calendar.YEAR)
         val month = now.get(Calendar.MONTH)
         val day = now.get(Calendar.DAY_OF_MONTH)
         val hour = now.get(Calendar.HOUR_OF_DAY)
         val minutes = now.get(Calendar.MINUTE)
+        val dialog = AlertDialog.Builder(activity as MainActivity)
         val view = (activity as MainActivity).layoutInflater.inflate(R.layout.dialog_add_reminder, null)
         view.text_view_date.text = "$year / $month / $day"
         view.text_view_time.text = "$hour : $minutes"
-        alert.setView(view)
-                .setPositiveButton("OK") { _, _ ->
+        dialog.setView(view)
+                .setPositiveButton("Add") { _, _ ->
                     val date = view.text_view_date.text
                     val time = view.text_view_time.text
                     val simpleDateFormat = SimpleDateFormat("yyyy / MM / d HH : mm" ).parse("$date $time")
-                    val todoEntity = TodoEntity(view.edit_text_reminder.text.toString(), false, "Reminder", simpleDateFormat)
-                    insertTodo(todoEntity)
-                    getReminder()
+                    insertTodo(TodoEntity(view.edit_text_reminder.text.toString(), false, "Reminder", simpleDateFormat))
                 }
         view.text_view_date.setOnClickListener {
-            val datePicker = DatePickerDialog(activity, { _, thisyear, thismonth, thisdayOfMonth ->
+            DatePickerDialog(activity, { _, thisyear, thismonth, thisdayOfMonth ->
                 view.text_view_date.text = "$thisyear / $thismonth / $thisdayOfMonth"
-            }, year, month, day)
-            datePicker.show()
+            }, year, month, day).show()
         }
         view.text_view_time.setOnClickListener {
-            val timePicker = TimePickerDialog(activity, { _, hourOfDay, minute ->
+            TimePickerDialog(activity, { _, hourOfDay, minute ->
                 view.text_view_time.text = "$hourOfDay : $minute"
-            }, hour, minutes, false)
-            timePicker.show()
+            }, hour, minutes, false).show()
         }
-        alert.show()
+        dialog.show()
     }
 
     override fun setupRecyclerView() {
