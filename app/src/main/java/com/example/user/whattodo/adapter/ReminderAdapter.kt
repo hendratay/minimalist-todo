@@ -5,10 +5,12 @@ import android.graphics.Paint
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.view.ActionMode
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.SimpleItemAnimator
 import android.view.*
 import com.example.user.whattodo.R
 import com.example.user.whattodo.model.Todo
 import kotlinx.android.synthetic.main.reminder_list_item.view.*
+import java.text.SimpleDateFormat
 
 class ReminderAdapter(private val reminderList: List<Todo>,
                       private val changeListener: (Todo) -> Unit,
@@ -47,11 +49,12 @@ class ReminderAdapter(private val reminderList: List<Todo>,
     inner class ReminderViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 
         fun bind(todo: Todo, changeListener: (Todo) -> Unit) {
-            itemView.text_view_reminder_date.text = todo.date.toString()
-            itemView.text_view_reminder.text = todo.todoText
             itemView.check_box_reminder.isChecked = todo.done
-            itemView.text_view_reminder.text = todo.todoText
+            itemView.text_view_reminder.text = todo.todoText.capitalize()
+            val sdf = SimpleDateFormat("EEEE, d MMM yyyy, h a")
+            itemView.text_view_reminder_date.text = sdf.format(todo.date)
             itemView.text_view_reminder.paintFlags = if(todo.done) (Paint.STRIKE_THRU_TEXT_FLAG) else 0
+            itemView.text_view_reminder_date.paintFlags = if(todo.done) (Paint.STRIKE_THRU_TEXT_FLAG) else 0
             itemView.check_box_reminder.setOnCheckedChangeListener { _, _ ->
                 changeListener(todo)
             }

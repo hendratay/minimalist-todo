@@ -48,10 +48,10 @@ class TaskAdapter(val items : MutableList<Todo>,
         fun bind(todo: Todo, changeListener: ((Todo) -> Unit)?) {
             itemView.check_box_task.isChecked = todo.done
             if(todo.done) {
-                itemView.text_view_task.text = todo.todoText
+                itemView.text_view_task.text = todo.todoText.capitalize()
                 itemView.text_view_task.paintFlags = (Paint.STRIKE_THRU_TEXT_FLAG)
             } else {
-                itemView.text_view_task.text = todo.todoText
+                itemView.text_view_task.text = todo.todoText.capitalize()
                 itemView.text_view_task.paintFlags = 0
             }
             itemView.check_box_task.setOnCheckedChangeListener { _, _ ->

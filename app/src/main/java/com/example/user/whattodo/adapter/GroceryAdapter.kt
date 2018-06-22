@@ -48,7 +48,7 @@ class GroceryAdapter(private val groceryList: List<Todo>,
 
         fun bind(todo: Todo, position: Int, changeListener: (Todo) -> Unit) {
             itemView.check_box_grocery.isChecked = todo.done
-            itemView.text_view_grocery.text = "${position + 1}. ${todo.todoText}"
+            itemView.text_view_grocery.text = "${position + 1}. ${todo.todoText.capitalize()}"
             itemView.text_view_grocery.paintFlags = if(todo.done) (Paint.STRIKE_THRU_TEXT_FLAG) else 0
             itemView.check_box_grocery.setOnCheckedChangeListener { _, _ ->
                 changeListener(todo)
