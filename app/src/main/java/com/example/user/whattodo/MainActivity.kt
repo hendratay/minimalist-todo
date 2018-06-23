@@ -1,5 +1,6 @@
 package com.example.user.whattodo
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.example.user.whattodo.adapter.PagerAdapter
@@ -22,6 +23,16 @@ class MainActivity : AppCompatActivity() {
     private fun setupNavigation() {
         view_pager.adapter = PagerAdapter(supportFragmentManager)
         tab_layout.setupWithViewPager(view_pager)
+        if(intent.getStringExtra("fragment") == "reminderFragment" ) {
+            view_pager.currentItem = 1
+        }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        if(intent?.getStringExtra("fragment") == "reminderFragment" ) {
+            view_pager.currentItem = 1
+        }
     }
 
 }

@@ -21,7 +21,10 @@ class AlarmReceiver: BroadcastReceiver() {
                     setContentTitle("Reminder")
                     setContentText(intent.getStringExtra("reminder"))
                     setDefaults(NotificationCompat.DEFAULT_ALL)
-                    setContentIntent(PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java), 0))
+                    setContentIntent(PendingIntent.getActivity(context,
+                            0,
+                            Intent(context, MainActivity::class.java).putExtra("fragment", "reminderFragment"),
+                            PendingIntent.FLAG_UPDATE_CURRENT))
                     setAutoCancel(true)
                 }.build()
         )
