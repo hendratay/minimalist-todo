@@ -5,7 +5,6 @@ import android.graphics.Paint
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.view.ActionMode
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.SimpleItemAnimator
 import android.view.*
 import com.example.user.whattodo.R
 import com.example.user.whattodo.model.Todo
