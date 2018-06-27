@@ -1,6 +1,8 @@
 package com.example.user.whattodo.fragment
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
@@ -29,18 +31,13 @@ class TaskFragment: TodoFragment() {
 
     override fun addTodoDialog() {
         val view = (activity as MainActivity).layoutInflater.inflate(R.layout.dialog_add_task, null)
-        val dialog = AlertDialog.Builder(activity as MainActivity, R.style.Theme_AppCompat_Light_Dialog_Alert)
+        val dialog = AlertDialog.Builder(activity as MainActivity, R.style.DialogTheme)
                 .setView(view)
                 .setPositiveButton("Add") { _, _ ->
                     insertTodo(TodoEntity(view.edit_text_task.text.toString(), false, "Task", null))
                 }
-                .setNegativeButton("Cancel") {dialog, _ ->
-                    dialog.dismiss()
-                }
                 .create()
-        dialog.window.attributes.apply {
-            gravity = Gravity.BOTTOM
-        }
+        dialog.window.setGravity(Gravity.BOTTOM)
         dialog.show()
     }
 

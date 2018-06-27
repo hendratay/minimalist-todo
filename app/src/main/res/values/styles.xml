@@ -11,4 +11,14 @@
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
     </style>
 
+    <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowBackground">@null</item>
+        <!--Landscape-->
+        <item name="android:windowMinWidthMajor">100%</item>
+        <!--Potrait-->
+        <item name="android:windowMinWidthMinor">100%</item>
+        <item name="android:background">@android:color/white</item>
+        <item name="android:windowSoftInputMode">stateAlwaysVisible</item>
+    </style>
+
 </resources>
