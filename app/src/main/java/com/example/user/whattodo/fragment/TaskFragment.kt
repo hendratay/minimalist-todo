@@ -1,8 +1,14 @@
 package com.example.user.whattodo.fragment
 
+import android.content.Context
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
+import android.view.Gravity
+import android.view.ViewGroup
+import android.view.WindowManager
+import android.view.inputmethod.InputMethod
+import android.view.inputmethod.InputMethodManager
 import com.example.user.whattodo.MainActivity
 import com.example.user.whattodo.R
 import com.example.user.whattodo.model.Todo
@@ -22,15 +28,19 @@ class TaskFragment: TodoFragment() {
     }
 
     override fun addTodoDialog() {
-        val dialog = AlertDialog.Builder(activity as MainActivity)
         val view = (activity as MainActivity).layoutInflater.inflate(R.layout.dialog_add_task, null)
-        dialog.setView(view)
+        val dialog = AlertDialog.Builder(activity as MainActivity, R.style.Theme_AppCompat_Light_Dialog_Alert)
+                .setView(view)
                 .setPositiveButton("Add") { _, _ ->
                     insertTodo(TodoEntity(view.edit_text_task.text.toString(), false, "Task", null))
                 }
                 .setNegativeButton("Cancel") {dialog, _ ->
                     dialog.dismiss()
                 }
+                .create()
+        dialog.window.attributes.apply {
+            gravity = Gravity.BOTTOM
+        }
         dialog.show()
     }
 
