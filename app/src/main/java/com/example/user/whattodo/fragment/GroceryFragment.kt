@@ -3,6 +3,7 @@ package com.example.user.whattodo.fragment
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
+import android.view.Gravity
 import com.example.user.whattodo.MainActivity
 import com.example.user.whattodo.R
 import com.example.user.whattodo.adapter.GroceryAdapter
@@ -22,15 +23,15 @@ class GroceryFragment: TodoFragment() {
     }
 
     override fun addTodoDialog() {
-        val dialog = AlertDialog.Builder(activity as MainActivity)
         val view = (activity as MainActivity).layoutInflater.inflate(R.layout.dialog_add_grocery, null)
-        dialog.setView(view)
-                .setPositiveButton("Add") { _, _ ->
-                    insertTodo(TodoEntity(view.edit_text_grocery.text.toString(), false, "Grocery", null))
-                }
-                .setNegativeButton("Cancel") {dialog, _ ->
-                    dialog.dismiss()
-                }
+        val dialog = AlertDialog.Builder(activity as MainActivity, R.style.DialogTheme).setView(view).create()
+        view.button_add_task.setOnClickListener {
+            if(view.edit_text_grocery.text.isNotBlank()) {
+                insertTodo(TodoEntity(view.edit_text_grocery.text.toString(), false, "Grocery", null))
+                dialog.dismiss()
+            }
+        }
+        dialog.window.setGravity(Gravity.BOTTOM)
         dialog.show()
     }
 

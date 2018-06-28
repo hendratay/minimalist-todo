@@ -1,16 +1,10 @@
 package com.example.user.whattodo.fragment
 
-import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Gravity
-import android.view.ViewGroup
-import android.view.WindowManager
-import android.view.inputmethod.InputMethod
-import android.view.inputmethod.InputMethodManager
+import android.view.KeyEvent
 import com.example.user.whattodo.MainActivity
 import com.example.user.whattodo.R
 import com.example.user.whattodo.model.Todo
@@ -31,12 +25,13 @@ class TaskFragment: TodoFragment() {
 
     override fun addTodoDialog() {
         val view = (activity as MainActivity).layoutInflater.inflate(R.layout.dialog_add_task, null)
-        val dialog = AlertDialog.Builder(activity as MainActivity, R.style.DialogTheme)
-                .setView(view)
-                .setPositiveButton("Add") { _, _ ->
-                    insertTodo(TodoEntity(view.edit_text_task.text.toString(), false, "Task", null))
-                }
-                .create()
+        val dialog = AlertDialog.Builder(activity as MainActivity, R.style.DialogTheme).setView(view).create()
+        view.button_add_task.setOnClickListener {
+            if(view.edit_text_task.text.isNotBlank()) {
+                insertTodo(TodoEntity(view.edit_text_task.text.toString(), false, "Task", null))
+                dialog.dismiss()
+            }
+        }
         dialog.window.setGravity(Gravity.BOTTOM)
         dialog.show()
     }

@@ -9,12 +9,16 @@ import android.content.Intent
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
+import android.text.format.DateUtils
+import android.view.Gravity
 import com.example.user.whattodo.receiver.AlarmReceiver
 import com.example.user.whattodo.MainActivity
 import com.example.user.whattodo.R
 import com.example.user.whattodo.adapter.ReminderAdapter
 import com.example.user.whattodo.db.TodoEntity
 import com.example.user.whattodo.model.Todo
+import kotlinx.android.synthetic.main.dialog_add_grocery.*
+import kotlinx.android.synthetic.main.dialog_add_reminder.*
 import kotlinx.android.synthetic.main.dialog_add_reminder.view.*
 import kotlinx.android.synthetic.main.fragment_todo.*
 import java.text.SimpleDateFormat
@@ -37,30 +41,26 @@ class ReminderFragment: TodoFragment() {
         val year = now.get(Calendar.YEAR)
         val month = now.get(Calendar.MONTH)
         val day = now.get(Calendar.DAY_OF_MONTH)
-        val hour = now.get(Calendar.HOUR_OF_DAY)
-        val minutes = now.get(Calendar.MINUTE)
-        val dialog = AlertDialog.Builder(activity as MainActivity)
+        var selectedDate = "$year/$month/$day"
         val view = (activity as MainActivity).layoutInflater.inflate(R.layout.dialog_add_reminder, null)
-        view.text_view_date.text = "$year / ${month + 1} / $day"
-        view.text_view_time.text = "$hour : $minutes"
-        dialog.setView(view)
-                .setPositiveButton("Add") { _, _ ->
-                    val date = view.text_view_date.text
-                    val time = view.text_view_time.text
-                    val simpleDateFormat = SimpleDateFormat("yyyy / MM / d HH : mm" ).parse("$date $time")
-                    insertTodo(TodoEntity(view.edit_text_reminder.text.toString(), false, "Reminder", simpleDateFormat))
-                    setReminder(simpleDateFormat.time, view.edit_text_reminder.text.toString())
-                }
+        val dialog = AlertDialog.Builder(activity as MainActivity, R.style.DialogTheme).setView(view).create()
+        view.text_view_date.text = DateUtils.getRelativeTimeSpanString(now.timeInMillis, now.timeInMillis, DateUtils.DAY_IN_MILLIS)
         view.text_view_date.setOnClickListener {
             DatePickerDialog(activity, { _, thisyear, thismonth, thisdayOfMonth ->
-                view.text_view_date.text = "$thisyear / ${thismonth + 1} / $thisdayOfMonth"
+                selectedDate = "$thisyear/$thismonth/$thisdayOfMonth"
+                val calendar = GregorianCalendar(thisyear, thismonth, thisdayOfMonth)
+                view.text_view_date.text = DateUtils.getRelativeTimeSpanString(calendar.timeInMillis, now.timeInMillis, DateUtils.DAY_IN_MILLIS)
             }, year, month, day).show()
         }
-        view.text_view_time.setOnClickListener {
-            TimePickerDialog(activity, { _, hourOfDay, minute ->
-                view.text_view_time.text = "$hourOfDay : $minute"
-            }, hour, minutes, false).show()
+        view.button_add_reminder.setOnClickListener {
+            val simpleDateFormat = SimpleDateFormat("yyyy/MM/d" ).parse("$selectedDate")
+            if(view.edit_text_reminder.text.isNotBlank()) {
+                insertTodo(TodoEntity(view.edit_text_reminder.text.toString(), false, "Reminder", simpleDateFormat))
+                setReminder(simpleDateFormat.time, view.edit_text_reminder.text.toString())
+                dialog.dismiss()
+            }
         }
+        dialog.window.attributes.gravity = Gravity.BOTTOM
         dialog.show()
     }
 
