@@ -17,8 +17,6 @@ import com.example.user.whattodo.R
 import com.example.user.whattodo.adapter.ReminderAdapter
 import com.example.user.whattodo.db.TodoEntity
 import com.example.user.whattodo.model.Todo
-import kotlinx.android.synthetic.main.dialog_add_grocery.*
-import kotlinx.android.synthetic.main.dialog_add_reminder.*
 import kotlinx.android.synthetic.main.dialog_add_reminder.view.*
 import kotlinx.android.synthetic.main.fragment_todo.*
 import java.text.SimpleDateFormat
@@ -41,10 +39,14 @@ class ReminderFragment: TodoFragment() {
         val year = now.get(Calendar.YEAR)
         val month = now.get(Calendar.MONTH)
         val day = now.get(Calendar.DAY_OF_MONTH)
-        var selectedDate = "$year/$month/$day"
+        val hour = now.get(Calendar.HOUR_OF_DAY)
+        val minute = now.get(Calendar.MINUTE)
+        var selectedDate = "$year/${month + 1}/$day"
+        var selectedTime = "$year:$minute"
         val view = (activity as MainActivity).layoutInflater.inflate(R.layout.dialog_add_reminder, null)
         val dialog = AlertDialog.Builder(activity as MainActivity, R.style.DialogTheme).setView(view).create()
         view.text_view_date.text = DateUtils.getRelativeTimeSpanString(now.timeInMillis, now.timeInMillis, DateUtils.DAY_IN_MILLIS)
+        view.text_view_time.text = DateUtils.getRelativeTimeSpanString(now.timeInMillis, now.timeInMillis, DateUtils.MINUTE_IN_MILLIS)
         view.text_view_date.setOnClickListener {
             DatePickerDialog(activity, { _, thisyear, thismonth, thisdayOfMonth ->
                 selectedDate = "$thisyear/$thismonth/$thisdayOfMonth"
@@ -52,8 +54,15 @@ class ReminderFragment: TodoFragment() {
                 view.text_view_date.text = DateUtils.getRelativeTimeSpanString(calendar.timeInMillis, now.timeInMillis, DateUtils.DAY_IN_MILLIS)
             }, year, month, day).show()
         }
+        view.text_view_time.setOnClickListener {
+            TimePickerDialog(activity, {_, thisHourOfDay, thisMinute ->
+                selectedTime = "$thisHourOfDay:$thisMinute"
+                val calendar = GregorianCalendar(year, month, day, thisHourOfDay, thisMinute)
+                view.text_view_time.text = DateUtils.getRelativeTimeSpanString(calendar.timeInMillis, now.timeInMillis, DateUtils.MINUTE_IN_MILLIS)
+            }, hour, minute, false).show()
+        }
         view.button_add_reminder.setOnClickListener {
-            val simpleDateFormat = SimpleDateFormat("yyyy/MM/d" ).parse("$selectedDate")
+            val simpleDateFormat = SimpleDateFormat("yyyy/MM/d HH:mm" ).parse("$selectedDate $selectedTime")
             if(view.edit_text_reminder.text.isNotBlank()) {
                 insertTodo(TodoEntity(view.edit_text_reminder.text.toString(), false, "Reminder", simpleDateFormat))
                 setReminder(simpleDateFormat.time, view.edit_text_reminder.text.toString())
