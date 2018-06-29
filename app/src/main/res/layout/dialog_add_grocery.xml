@@ -21,7 +21,7 @@
         android:inputType="text" />
 
     <ImageButton
-        android:id="@+id/button_add_task"
+        android:id="@+id/button_add_grocery"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
