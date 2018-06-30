@@ -12,6 +12,8 @@
 
     <CheckBox
         android:id="@+id/check_box_task"
+        android:button="@drawable/circle_checkbox"
+        android:padding="4dp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1" />
