@@ -1,7 +1,13 @@
 <resources>
     <string name="app_name">What Todo</string>
+
     <string name="add_task">Add Task</string>
     <string name="add_reminder">Add Reminder</string>
-    <string name="remind_me_about">Remind me about...</string>
     <string name="add_grocery">Add Grocery</string>
+
+    <string name="remind_me_about">Remind me about...</string>
+
+    <string name="placeholder_complete">Complete</string>
+    <string name="placeholder_incomplete">Incomplete</string>
+    <string name="placeholder_todo">All tasks: 3</string>
 </resources>
