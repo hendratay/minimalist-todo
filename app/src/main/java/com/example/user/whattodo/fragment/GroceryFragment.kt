@@ -28,6 +28,20 @@ class GroceryFragment: TodoFragment() {
         recycler_view.adapter = adapter
     }
 
+    fun addGroceryDialog() {
+        val view = layoutInflater.inflate(R.layout.dialog_add_grocery, null)
+        val dialog = AlertDialog.Builder(activity as MainActivity, R.style.DialogTheme).setView(view).create()
+        view.button_add_grocery.setOnClickListener {
+            if(view.edit_text_grocery.text.isNotBlank()) {
+                insertTodo(TodoEntity(view.edit_text_grocery.text.toString(), false, "Grocery", null))
+                dialog.dismiss()
+            }
+        }
+        dialog.window.setGravity(Gravity.BOTTOM)
+        dialog.show()
+    }
+
+
     private fun getGrocery() {
         getTodo("Grocery")
                 .subscribe {

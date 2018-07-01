@@ -26,6 +26,8 @@ class ReminderFragment: TodoFragment() {
 
     private lateinit var adapter: ReminderAdapter
     private var reminderList: MutableList<Todo> = ArrayList()
+    private var notificationId = 0
+    private lateinit var alarmManager: AlarmManager
 
     override fun onStart() {
         super.onStart()
@@ -36,6 +38,45 @@ class ReminderFragment: TodoFragment() {
         recycler_view.layoutManager = LinearLayoutManager(activity)
         adapter = ReminderAdapter(reminderList, { onItemChecked(it) }, { onItemDeleted(it) })
         recycler_view.adapter = adapter
+    }
+
+    fun addReminderDialog() {
+        val now = Calendar.getInstance()
+        val year = now.get(Calendar.YEAR)
+        val month = now.get(Calendar.MONTH)
+        val day = now.get(Calendar.DAY_OF_MONTH)
+        val hour = now.get(Calendar.HOUR_OF_DAY)
+        val minute = now.get(Calendar.MINUTE)
+        var selectedDate = "$year/${month + 1}/$day"
+        var selectedTime = "$year:$minute"
+        val view = layoutInflater.inflate(R.layout.dialog_add_reminder, null)
+        val dialog = AlertDialog.Builder(activity as MainActivity, R.style.DialogTheme).setView(view).create()
+        view.text_view_date.text = DateUtils.getRelativeTimeSpanString(now.timeInMillis, now.timeInMillis, DateUtils.DAY_IN_MILLIS)
+        view.text_view_time.text = DateUtils.getRelativeTimeSpanString(now.timeInMillis, now.timeInMillis, DateUtils.MINUTE_IN_MILLIS)
+        view.text_view_date.setOnClickListener {
+            DatePickerDialog(activity, { _, thisyear, thismonth, thisdayOfMonth ->
+                selectedDate = "$thisyear/$thismonth/$thisdayOfMonth"
+                val calendar = GregorianCalendar(thisyear, thismonth, thisdayOfMonth)
+                view.text_view_date.text = DateUtils.getRelativeTimeSpanString(calendar.timeInMillis, now.timeInMillis, DateUtils.DAY_IN_MILLIS)
+            }, year, month, day).show()
+        }
+        view.text_view_time.setOnClickListener {
+            TimePickerDialog(activity, {_, thisHourOfDay, thisMinute ->
+                selectedTime = "$thisHourOfDay:$thisMinute"
+                val calendar = GregorianCalendar(year, month, day, thisHourOfDay, thisMinute)
+                view.text_view_time.text = DateUtils.getRelativeTimeSpanString(calendar.timeInMillis, now.timeInMillis, DateUtils.MINUTE_IN_MILLIS)
+            }, hour, minute, false).show()
+        }
+        view.button_add_reminder.setOnClickListener {
+            val simpleDateFormat = SimpleDateFormat("yyyy/MM/d HH:mm" ).parse("$selectedDate $selectedTime")
+            if(view.edit_text_reminder.text.isNotBlank()) {
+                insertTodo(TodoEntity(view.edit_text_reminder.text.toString(), false, "Reminder", simpleDateFormat))
+                setReminder(simpleDateFormat.time, view.edit_text_reminder.text.toString())
+                dialog.dismiss()
+            }
+        }
+        dialog.window.attributes.gravity = Gravity.BOTTOM
+        dialog.show()
     }
 
     private fun getReminder() {
@@ -62,6 +103,17 @@ class ReminderFragment: TodoFragment() {
             undoDeleteTodo()
             getReminder()
         }
+    }
+
+    private fun setReminder(time: Long, reminder: String) {
+        alarmManager = activity?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmManager.set(AlarmManager.RTC_WAKEUP, time,
+                PendingIntent.getBroadcast(activity,
+                        0,
+                        Intent(activity, AlarmReceiver::class.java).apply {
+                            putExtra("notificationId", ++notificationId)
+                            putExtra("reminder", reminder)}, PendingIntent.FLAG_CANCEL_CURRENT)
+        )
     }
 
 }
