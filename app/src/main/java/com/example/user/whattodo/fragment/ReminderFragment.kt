@@ -52,7 +52,7 @@ class ReminderFragment: TodoFragment() {
         val view = layoutInflater.inflate(R.layout.dialog_add_reminder, null)
         val dialog = AlertDialog.Builder(activity as MainActivity, R.style.DialogTheme).setView(view).create()
         view.text_view_date.text = DateUtils.getRelativeTimeSpanString(now.timeInMillis, now.timeInMillis, DateUtils.DAY_IN_MILLIS)
-        view.text_view_time.text = DateUtils.getRelativeTimeSpanString(now.timeInMillis, now.timeInMillis, DateUtils.MINUTE_IN_MILLIS)
+        view.text_view_time.text = getString(R.string.date_utils_time_now)
         view.text_view_date.setOnClickListener {
             DatePickerDialog(activity, { _, thisyear, thismonth, thisdayOfMonth ->
                 selectedDate = "$thisyear/$thismonth/$thisdayOfMonth"
@@ -64,7 +64,8 @@ class ReminderFragment: TodoFragment() {
             TimePickerDialog(activity, {_, thisHourOfDay, thisMinute ->
                 selectedTime = "$thisHourOfDay:$thisMinute"
                 val calendar = GregorianCalendar(year, month, day, thisHourOfDay, thisMinute)
-                view.text_view_time.text = DateUtils.getRelativeTimeSpanString(calendar.timeInMillis, now.timeInMillis, DateUtils.MINUTE_IN_MILLIS)
+                view.text_view_time.text = if(thisHourOfDay == hour && thisMinute == minute) getString(R.string.date_utils_time_now)
+                else DateUtils.getRelativeTimeSpanString(calendar.timeInMillis, now.timeInMillis, DateUtils.MINUTE_IN_MILLIS)
             }, hour, minute, false).show()
         }
         view.button_add_reminder.setOnClickListener {
