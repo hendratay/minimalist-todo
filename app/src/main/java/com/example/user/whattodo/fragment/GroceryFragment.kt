@@ -1,9 +1,11 @@
 package com.example.user.whattodo.fragment
 
+import android.arch.persistence.room.Delete
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Gravity
+import com.example.user.whattodo.DeleteActionModeCallback
 import com.example.user.whattodo.MainActivity
 import com.example.user.whattodo.R
 import com.example.user.whattodo.adapter.GroceryAdapter
@@ -66,6 +68,11 @@ class GroceryFragment: TodoFragment() {
             undoDeleteTodo()
             getGrocery()
         }
+    }
+
+    override fun destroyActionCallback() {
+        adapter.deleteActionMode.actionMode?.finish()
+        adapter.deleteActionMode.actionMode = null
     }
 
 }

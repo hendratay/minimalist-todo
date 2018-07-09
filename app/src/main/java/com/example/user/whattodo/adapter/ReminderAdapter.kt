@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.view.ActionMode
 import android.support.v7.widget.RecyclerView
 import android.view.*
+import com.example.user.whattodo.DeleteActionModeCallback
 import com.example.user.whattodo.R
 import com.example.user.whattodo.model.Todo
 import kotlinx.android.synthetic.main.reminder_list_item.view.*
@@ -13,37 +14,10 @@ import java.text.SimpleDateFormat
 
 class ReminderAdapter(private val reminderList: List<Todo>,
                       private val changeListener: (Todo) -> Unit,
-                      private val deleteListener: (List<Int>) -> Unit):
+                      deleteListener: (List<Int>) -> Unit):
         RecyclerView.Adapter<ReminderAdapter.ReminderViewHolder>() {
 
-    private var actionMode: ActionMode? = null
-    private var multiSelect: Boolean = false
-    private var selectedItems: HashMap<Int, Todo> = hashMapOf()
-
-    private var actionModeCallbacks: ActionMode.Callback = object: ActionMode.Callback {
-        override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
-            multiSelect = true
-            menu?.add("Delete")
-            return true
-        }
-
-        override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
-            return false
-        }
-
-        override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
-            deleteListener(selectedItems.keys.toList())
-            mode?.finish()
-            return true
-        }
-
-        override fun onDestroyActionMode(mode: ActionMode?) {
-            actionMode = null
-            multiSelect = false
-            selectedItems.clear()
-            notifyDataSetChanged()
-        }
-    }
+    var deleteActionMode = DeleteActionModeCallback(null, false, hashMapOf(), deleteListener, this as RecyclerView.Adapter<RecyclerView.ViewHolder>)
 
     inner class ReminderViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 
@@ -61,30 +35,30 @@ class ReminderAdapter(private val reminderList: List<Todo>,
         }
 
         private fun selectItem(item: Int) {
-            if(multiSelect) {
-                if (selectedItems.containsKey(item)) {
-                    selectedItems.remove(item)
+            if(deleteActionMode.multiSelect) {
+                if (deleteActionMode.selectedItems.containsKey(item)) {
+                    deleteActionMode.selectedItems.remove(item)
                     itemView.setBackgroundColor(Color.TRANSPARENT)
                 } else {
-                    selectedItems[item] = reminderList[item]
+                    deleteActionMode.selectedItems[item] = reminderList[item]
                     itemView.setBackgroundColor(Color.LTGRAY)
                 }
             }
         }
 
         private fun update(value: Int) {
-            if(selectedItems.containsKey(value)) {
+            if(deleteActionMode.selectedItems.containsKey(value)) {
                 itemView.setBackgroundColor(Color.LTGRAY)
             } else {
                 itemView.setBackgroundColor(Color.TRANSPARENT)
             }
             itemView.setOnLongClickListener {
-                actionMode = (it.context as AppCompatActivity).startSupportActionMode(actionModeCallbacks)
+                deleteActionMode.actionMode = (it.context as AppCompatActivity).startSupportActionMode(deleteActionMode)
                 selectItem(value)
                 true
             }
             itemView.setOnClickListener {
-                if(actionMode == null) itemView.check_box_reminder.isChecked = !itemView.check_box_reminder.isChecked else selectItem(value)
+                if(deleteActionMode.actionMode == null) itemView.check_box_reminder.isChecked = !itemView.check_box_reminder.isChecked else selectItem(value)
             }
         }
 

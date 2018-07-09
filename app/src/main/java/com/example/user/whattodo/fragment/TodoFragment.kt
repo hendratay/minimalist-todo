@@ -67,4 +67,7 @@ open class TodoFragment: Fragment() {
         }
     }
 
+    open fun destroyActionCallback() {
+    }
+
 }

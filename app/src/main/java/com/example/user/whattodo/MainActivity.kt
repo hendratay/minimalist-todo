@@ -3,11 +3,13 @@ package com.example.user.whattodo
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.view.ViewPager
+import com.example.user.whattodo.adapter.GroceryAdapter
 import com.example.user.whattodo.adapter.PagerAdapter
 import com.example.user.whattodo.db.TodoDatabase
 import com.example.user.whattodo.fragment.GroceryFragment
 import com.example.user.whattodo.fragment.ReminderFragment
 import com.example.user.whattodo.fragment.TaskFragment
+import com.example.user.whattodo.fragment.TodoFragment
 import kotlinx.android.synthetic.main.activity_main.*;
 import javax.inject.Inject
 
@@ -35,6 +37,9 @@ class MainActivity : AppCompatActivity() {
     private fun setupAddTodoButton() {
         view_pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
+                val fragment = supportFragmentManager
+                        .findFragmentByTag("android:switcher:${R.id.view_pager}:${view_pager.currentItem}") as TodoFragment
+                fragment.destroyActionCallback()
             }
 
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {

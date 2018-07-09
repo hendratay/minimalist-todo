@@ -67,4 +67,9 @@ class TaskFragment: TodoFragment() {
         }
     }
 
+    override fun destroyActionCallback() {
+        adapter.deleteActionMode.actionMode?.finish()
+        adapter.deleteActionMode.actionMode = null
+    }
+
 }

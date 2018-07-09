@@ -117,4 +117,9 @@ class ReminderFragment: TodoFragment() {
         )
     }
 
+    override fun destroyActionCallback() {
+        adapter.deleteActionMode.actionMode?.finish()
+        adapter.deleteActionMode.actionMode = null
+    }
+
 }
