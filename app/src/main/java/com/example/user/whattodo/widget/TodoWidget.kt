@@ -23,7 +23,13 @@ class TodoWidget : AppWidgetProvider() {
     override fun onDisabled(context: Context) {
     }
 
+    override fun onDeleted(context: Context?, appWidgetIds: IntArray?) {
+    }
+
     companion object {
+
+        const val EXTRA_ITEM = "com.example.user.whattodo.widget.EXTRA_ITEM"
+
         internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager,
                                      appWidgetId: Int) {
 
@@ -36,9 +42,14 @@ class TodoWidget : AppWidgetProvider() {
             val intent = Intent(context, TodoRemoteViewsService::class.java)
             views.setRemoteAdapter(R.id.appwidget_list_view, intent)
 
+            val startActivityIntent = Intent(context, MainActivity::class.java)
+            val startActivityPendingIntent = PendingIntent.getActivity(context, 1, startActivityIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+            views.setPendingIntentTemplate(R.id.appwidget_list_view, startActivityPendingIntent)
+
             appWidgetManager.updateAppWidget(appWidgetId, views)
 
         }
+
     }
 
 }

@@ -34,17 +34,23 @@ class TodoRemoteViewsFactory(val context: Context, val intent: Intent?): RemoteV
     }
 
     override fun hasStableIds(): Boolean {
-        return false
+        return true
     }
 
     override fun getViewAt(position: Int): RemoteViews {
         val remoteViews = RemoteViews(context.packageName, R.layout.todo_widget_list_item)
+
+        val fillIntent = Intent()
+        Intent().putExtra(TodoWidget.EXTRA_ITEM, position)
+        remoteViews.setOnClickFillInIntent(R.id.appwidget_list_item, fillIntent)
+
         when(widgetList[position].type) {
             context.getString(R.string.task) -> remoteViews.setImageViewResource(R.id.appwidget_list_item_icon, R.drawable.ic_send_black_24dp)
             context.getString(R.string.reminder) -> remoteViews.setImageViewResource(R.id.appwidget_list_item_icon, R.drawable.ic_event_available_black_24dp)
             context.getString(R.string.grocery) -> remoteViews.setImageViewResource(R.id.appwidget_list_item_icon, R.drawable.ic_shopping_cart_black_24dp)
         }
         remoteViews.setTextViewText(R.id.appwidget_list_item_text, widgetList[position].todoText.capitalize())
+
         return remoteViews
     }
 
