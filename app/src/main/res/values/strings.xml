@@ -8,4 +8,7 @@
     <string name="remind_me_about">Remind me about...</string>
 
     <string name="date_utils_time_now">Now</string>
+    <string name="task">Task</string>
+    <string name="reminder">Reminder</string>
+    <string name="grocery">Grocery</string>
 </resources>

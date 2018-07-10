@@ -14,14 +14,15 @@
         app:tabMode="fixed">
     </android.support.design.widget.TabLayout>
 
-    <View
+<!--    <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_marginTop="48dp"
-        android:background="@android:color/black" />
+        android:background="@android:color/black" />-->
 
     <android.support.v4.view.ViewPager
         android:id="@+id/view_pager"
+        android:background="#f5f5f5"
         android:layout_marginTop="48dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">

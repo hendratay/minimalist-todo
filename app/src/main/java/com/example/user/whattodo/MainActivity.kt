@@ -1,15 +1,17 @@
 package com.example.user.whattodo
 
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.view.ViewPager
-import com.example.user.whattodo.adapter.GroceryAdapter
 import com.example.user.whattodo.adapter.PagerAdapter
 import com.example.user.whattodo.db.TodoDatabase
 import com.example.user.whattodo.fragment.GroceryFragment
 import com.example.user.whattodo.fragment.ReminderFragment
 import com.example.user.whattodo.fragment.TaskFragment
 import com.example.user.whattodo.fragment.TodoFragment
+import com.example.user.whattodo.widget.TodoWidget
 import kotlinx.android.synthetic.main.activity_main.*;
 import javax.inject.Inject
 
@@ -24,6 +26,12 @@ class MainActivity : AppCompatActivity() {
 
         setupNavigation()
         setupAddTodoButton()
+    }
+
+    override fun onPause() {
+        onBackPressed()
+        super.onPause()
+        updateWidget()
     }
 
     private fun setupNavigation() {
@@ -70,6 +78,11 @@ class MainActivity : AppCompatActivity() {
             override fun onPageSelected(position: Int) {
             }
         })
+    }
+
+    private fun updateWidget() {
+        val ids = AppWidgetManager.getInstance(application).getAppWidgetIds(ComponentName(application, TodoWidget::class.java))
+        AppWidgetManager.getInstance(this).notifyAppWidgetViewDataChanged(ids, R.id.appwidget_list_view);
     }
 
 }

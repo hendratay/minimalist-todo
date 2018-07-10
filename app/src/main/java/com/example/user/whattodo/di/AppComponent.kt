@@ -2,6 +2,7 @@ package com.example.user.whattodo.di
 
 import com.example.user.whattodo.App
 import com.example.user.whattodo.MainActivity
+import com.example.user.whattodo.widget.TodoRemoteViewsFactory
 import dagger.Component
 import javax.inject.Singleton
 
@@ -10,4 +11,5 @@ import javax.inject.Singleton
 interface AppComponent {
     fun inject(application: App)
     fun inject(mainActivity: MainActivity)
+    fun inject(todoRemoteViewsFactory: TodoRemoteViewsFactory)
 }
