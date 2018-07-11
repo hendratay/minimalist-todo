@@ -14,7 +14,9 @@ class TodoRemoteViewsFactory(val context: Context, val intent: Intent?): RemoteV
 
     @Inject lateinit var database : TodoDatabase
 
-    private var widgetList: MutableList<Todo> = ArrayList()
+    companion object {
+        var widgetList: MutableList<Todo> = ArrayList()
+    }
 
     override fun onCreate() {
         App.component.inject(this)
@@ -41,7 +43,7 @@ class TodoRemoteViewsFactory(val context: Context, val intent: Intent?): RemoteV
         val remoteViews = RemoteViews(context.packageName, R.layout.todo_widget_list_item)
 
         val fillIntent = Intent()
-        Intent().putExtra(TodoWidget.EXTRA_ITEM, position)
+        fillIntent.putExtra(TodoWidget.EXTRA_ITEM, position)
         remoteViews.setOnClickFillInIntent(R.id.appwidget_list_item, fillIntent)
 
         when(widgetList[position].type) {
@@ -67,7 +69,7 @@ class TodoRemoteViewsFactory(val context: Context, val intent: Intent?): RemoteV
     }
 
     private fun updateWidgetListView() {
-        database.todoDao().getAllTodo()
+        database.todoDao().getAllUndoneTodo()
                 .subscribe {
                     widgetList.clear()
                     it.forEach { widgetList.add(Todo(it.id, it.todo, it.done, it.type, it.dateTime)) }
