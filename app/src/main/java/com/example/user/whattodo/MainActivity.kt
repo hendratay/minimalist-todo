@@ -13,6 +13,8 @@ import com.example.user.whattodo.fragment.TaskFragment
 import com.example.user.whattodo.fragment.TodoFragment
 import com.example.user.whattodo.widget.TodoWidget
 import kotlinx.android.synthetic.main.activity_main.*;
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
@@ -24,8 +26,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        setupToolbar()
         setupNavigation()
         setupAddTodoButton()
+    }
+
+    private fun setupToolbar() {
+        val sdf = SimpleDateFormat("EEEE, MMMM dd")
+        toolbar_title.text = sdf.format(Date(Calendar.getInstance().timeInMillis))
+        setSupportActionBar(toolbar)
     }
 
     override fun onPause() {
