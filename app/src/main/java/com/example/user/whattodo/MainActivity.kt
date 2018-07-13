@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
         view_pager.adapter = PagerAdapter(supportFragmentManager)
         tab_layout.setupWithViewPager(view_pager)
         if(intent.getStringExtra("fragment") == "reminderFragment" ) {
-            view_pager.currentItem = 1
+            view_pager.currentItem = 2
         }
     }
 
@@ -62,19 +62,19 @@ class MainActivity : AppCompatActivity() {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
                 fab_add_todo.setOnClickListener {
                     when(position) {
-                        0 -> {
+                        1 -> {
                             val taskFragment = supportFragmentManager
                                     .findFragmentByTag("android:switcher:${R.id.view_pager}:${view_pager.currentItem}")
                                     as TaskFragment
                             taskFragment.addTaskDialog()
                         }
-                        1 -> {
+                        2 -> {
                             val reminderFragment = supportFragmentManager
                                     .findFragmentByTag("android:switcher:${R.id.view_pager}:${view_pager.currentItem}")
                                     as ReminderFragment
                             reminderFragment.addReminderDialog()
                         }
-                        2 -> {
+                        3 -> {
                             val groceryFragment = supportFragmentManager
                                     .findFragmentByTag("android:switcher:${R.id.view_pager}:${view_pager.currentItem}")
                                     as GroceryFragment

@@ -10,6 +10,7 @@ import com.example.user.whattodo.R
 import com.example.user.whattodo.db.TodoEntity
 import com.example.user.whattodo.model.Todo
 import io.reactivex.Flowable
+import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -33,6 +34,24 @@ open class TodoFragment: Fragment() {
 
     fun getTodo(type: String): Flowable<List<TodoEntity>> {
         return (activity as MainActivity).database.todoDao().getTodo(type)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    fun getTodoType(): Flowable<List<String>> {
+        return (activity as MainActivity).database.todoDao().getTodoType()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    fun getTodoCount(type: String): Flowable<Int> {
+        return (activity as MainActivity).database.todoDao().getTodoCount(type)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    fun getTodoDoneCount(type: String): Flowable<Int> {
+        return (activity as MainActivity).database.todoDao().getDoneTodoCount(type)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
     }

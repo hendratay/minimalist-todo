@@ -15,13 +15,18 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <TextView
                 android:id="@+id/toolbar_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="?android:attr/actionBarSize"
                 android:layout_marginRight="?android:attr/actionBarSize"
-                android:gravity="center" />
+                android:gravity="center"
+                android:textAllCaps="false"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:fontFamily="monospace" />
         </android.support.v7.widget.Toolbar>
 
         <android.support.design.widget.TabLayout
