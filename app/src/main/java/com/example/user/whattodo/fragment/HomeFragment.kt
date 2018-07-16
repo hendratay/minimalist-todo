@@ -2,55 +2,60 @@ package com.example.user.whattodo.fragment
 
 import android.support.v7.widget.LinearLayoutManager
 import com.example.user.whattodo.adapter.HomeAdapter
+import com.example.user.whattodo.model.GeneralItem
+import com.example.user.whattodo.model.HeaderItem
+import com.example.user.whattodo.model.ListItem
+import com.example.user.whattodo.model.Todo
 import kotlinx.android.synthetic.main.fragment_todo.*
 
 class HomeFragment: TodoFragment() {
 
-    private lateinit var homeAdapter: HomeAdapter
-    private var todoType: MutableList<String> = ArrayList()
-    private var todoCount: MutableList<Int> = ArrayList()
-    private var todoDoneCount: MutableList<Int> = ArrayList()
+    private lateinit var adapter: HomeAdapter
+    private var consolidatedList: MutableList<ListItem> = ArrayList()
 
     override fun onStart() {
         super.onStart()
-        getType()
+        getTodos()
     }
 
     override fun setupRecyclerView() {
         recycler_view.layoutManager = LinearLayoutManager(activity)
-        homeAdapter = HomeAdapter(todoType, todoCount, todoDoneCount)
-        recycler_view.adapter = homeAdapter
+        adapter = HomeAdapter(consolidatedList)
+        recycler_view.adapter = adapter
     }
 
-    private fun getType() {
-        getTodoType()
+    private fun getTodos() {
+        getAllTodo()
                 .subscribe {
-                    todoType.clear()
-                    it.forEach { todoType.add(it) }
-                    homeAdapter.notifyDataSetChanged()
-                    getCount()
-                    getDoneCount()
+                    consolidatedList.clear()
+                    val todoList: MutableList<Todo> = ArrayList()
+                    it.forEach { todoList.add(Todo(it.id, it.todo, it.done, it.type, it.dateTime)) }
+                    val groupedHashMap: Map<String, MutableList<Todo>> = groupDataIntoHashMap(todoList)
+                    for(type: String in groupedHashMap.keys) {
+                        val typeItem = HeaderItem(type)
+                        consolidatedList.add(typeItem)
+                        for (todo: Todo in groupedHashMap[type]!!) {
+                            val generalItem = GeneralItem(todo)
+                            consolidatedList.add(generalItem)
+                        }
+                    }
+                    adapter.notifyDataSetChanged()
                 }
     }
 
-    private fun getCount() {
-        for(allType in 0..(todoType.size - 1)) {
-            getTodoCount(todoType[allType])
-                    .subscribe {
-                        todoCount.add(allType, it)
-                        homeAdapter.notifyDataSetChanged()
-                    }
+    private fun groupDataIntoHashMap(todoList: MutableList<Todo>): Map<String, MutableList<Todo>> {
+        val groupedHashMap: HashMap<String, MutableList<Todo>> = HashMap()
+        for(todo: Todo in todoList) {
+            val type = todo.type
+            if(groupedHashMap.containsKey(type)) {
+                groupedHashMap[type]?.add(todo)
+            } else {
+                val list: MutableList<Todo> = ArrayList()
+                list.add(todo)
+                groupedHashMap[type] = list
+            }
         }
-    }
-
-    private fun getDoneCount() {
-        for(allType in 0..(todoType.size - 1)) {
-            getTodoDoneCount(todoType[allType])
-                    .subscribe {
-                        todoDoneCount.add(allType, it)
-                        homeAdapter.notifyDataSetChanged()
-                    }
-        }
+        return groupedHashMap.toList().sortedBy { (key, _) -> key }.toMap()
     }
 
 }

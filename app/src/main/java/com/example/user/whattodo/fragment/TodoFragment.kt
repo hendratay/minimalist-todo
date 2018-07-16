@@ -38,20 +38,8 @@ open class TodoFragment: Fragment() {
                 .observeOn(AndroidSchedulers.mainThread())
     }
 
-    fun getTodoType(): Flowable<List<String>> {
-        return (activity as MainActivity).database.todoDao().getTodoType()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-    }
-
-    fun getTodoCount(type: String): Flowable<Int> {
-        return (activity as MainActivity).database.todoDao().getTodoCount(type)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-    }
-
-    fun getTodoDoneCount(type: String): Flowable<Int> {
-        return (activity as MainActivity).database.todoDao().getDoneTodoCount(type)
+    fun getAllTodo(): Flowable<List<TodoEntity>> {
+        return (activity as MainActivity).database.todoDao().getAllTodo()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
     }

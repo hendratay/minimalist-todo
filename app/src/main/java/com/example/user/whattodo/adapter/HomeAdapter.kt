@@ -5,41 +5,56 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.user.whattodo.R
-import kotlinx.android.synthetic.main.home_list_item.view.*
+import com.example.user.whattodo.model.GeneralItem
+import com.example.user.whattodo.model.HeaderItem
+import com.example.user.whattodo.model.ListItem
+import kotlinx.android.synthetic.main.item_general.view.*
+import kotlinx.android.synthetic.main.item_header.view.*
 
-class HomeAdapter(private val type: List<String>,
-                  private val count: List<Int>,
-                  private val done: List<Int>): RecyclerView.Adapter<HomeAdapter.HomeViewHolder>() {
 
-    inner class HomeViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        var todoTypeImageView = itemView.todo_type_image
-        var todoTypeTextView = itemView.todo_type_text
-        var todoTypeTodo = itemView.todo_type_todo
-        var todoTypeComplete = itemView.todo_type_todo_complete
-        var todoTypeInComplete = itemView.todo_type_todo_incomplete
-    }
+class HomeAdapter(private val todo: List<ListItem>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeViewHolder {
-        return HomeViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.home_list_item, parent, false))
-    }
-
-    override fun onBindViewHolder(holder: HomeViewHolder, position: Int) {
-        when(type[position]) {
-            "Task" -> holder.todoTypeImageView.setImageResource(R.drawable.ic_check_white_24dp)
-            "Reminder" -> holder.todoTypeImageView.setImageResource(R.drawable.ic_today_white_24dp)
-            "Grocery" -> holder.todoTypeImageView.setImageResource(R.drawable.ic_shopping_cart_white_24dp)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        lateinit var viewHolder: RecyclerView.ViewHolder
+        val inflater = LayoutInflater.from(parent.context)
+        when(viewType) {
+            ListItem.TYPE_HEADER -> {
+                val view = inflater.inflate(R.layout.item_header, parent, false)
+                viewHolder = HeaderViewHolder(view)
+            }
+            ListItem.TYPE_GENERAL -> {
+                val view = inflater.inflate(R.layout.item_general, parent, false)
+                viewHolder = GeneralViewHolder(view)
+            }
         }
-        holder.todoTypeTextView.text = type[position]
-        if(count.isNotEmpty()) holder.todoTypeTodo.text = when(position){
-            0 -> "Tasks: ${count[position]}"
-            1 -> "Reminders: ${count[position]}"
-            2 -> "Groceries: ${count[position]}"
-            else -> ""
-        }
-        if(done.isNotEmpty()) holder.todoTypeComplete.text = done[position].toString()
-        if(count.isNotEmpty() && done.isNotEmpty()) holder.todoTypeInComplete.text = (count[position] - done[position]).toString()
+        return viewHolder
     }
 
-    override fun getItemCount(): Int = type.size
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when(holder.itemViewType) {
+            ListItem.TYPE_HEADER -> {
+                val typeItem = todo[position] as HeaderItem
+                val headerViewHolder = holder as HeaderViewHolder
+                headerViewHolder.typeTextView.text = typeItem.type
+            }
+            ListItem.TYPE_GENERAL -> {
+                val todoItem = todo[position] as GeneralItem
+                val generalViewHolder = holder as GeneralViewHolder
+                generalViewHolder.todoTextView.text = todoItem.todo.todoText
+            }
+        }
+    }
+
+    override fun getItemCount(): Int = todo.size
+
+    override fun getItemViewType(position: Int) = todo[position].getType()
+
+    inner class HeaderViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+        var typeTextView = itemView.item_header_todo_type
+    }
+
+    inner class GeneralViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+        var todoTextView = itemView.item_general_todo
+    }
 
 }
