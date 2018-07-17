@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupToolbar() {
-        val sdf = SimpleDateFormat("EEEE, MMMM dd")
+        val sdf = SimpleDateFormat("EEEE, MMMM dd", Locale.getDefault())
         toolbar_title.text = sdf.format(Date(Calendar.getInstance().timeInMillis))
         setSupportActionBar(toolbar)
     }
@@ -44,6 +44,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupNavigation() {
         view_pager.adapter = PagerAdapter(supportFragmentManager)
+        view_pager.offscreenPageLimit = 3
         tab_layout.setupWithViewPager(view_pager)
         if(intent.getStringExtra("fragment") == "reminderFragment" ) {
             view_pager.currentItem = 2
@@ -60,29 +61,23 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-                when(position) {
-                    0 -> fab_add_todo.hide()
-                    1 -> fab_add_todo.show()
-                    2 -> fab_add_todo.show()
-                    3 -> fab_add_todo.show()
-                }
                 fab_add_todo.setOnClickListener {
                     when(position) {
                         1 -> {
                             val taskFragment = supportFragmentManager
-                                    .findFragmentByTag("android:switcher:${R.id.view_pager}:1")
+                                    .findFragmentByTag("android:switcher:${R.id.view_pager}:$position")
                                     as TaskFragment
                             taskFragment.addTaskDialog()
                         }
                         2 -> {
                             val reminderFragment = supportFragmentManager
-                                    .findFragmentByTag("android:switcher:${R.id.view_pager}:2")
+                                    .findFragmentByTag("android:switcher:${R.id.view_pager}:$position")
                                     as ReminderFragment
                             reminderFragment.addReminderDialog()
                         }
                         3 -> {
                             val groceryFragment = supportFragmentManager
-                                    .findFragmentByTag("android:switcher:${R.id.view_pager}:3")
+                                    .findFragmentByTag("android:switcher:${R.id.view_pager}:$position")
                                     as GroceryFragment
                             groceryFragment.addGroceryDialog()
                         }
@@ -91,6 +86,12 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onPageSelected(position: Int) {
+                when(position) {
+                    0 -> fab_add_todo.hide()
+                    1 -> fab_add_todo.show()
+                    2 -> fab_add_todo.show()
+                    3 -> fab_add_todo.show()
+                }
             }
         })
     }
