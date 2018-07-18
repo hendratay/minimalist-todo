@@ -2,10 +2,7 @@ package com.example.user.whattodo.fragment
 
 import android.support.v7.widget.LinearLayoutManager
 import com.example.user.whattodo.adapter.HomeAdapter
-import com.example.user.whattodo.model.GeneralItem
-import com.example.user.whattodo.model.HeaderItem
-import com.example.user.whattodo.model.ListItem
-import com.example.user.whattodo.model.Todo
+import com.example.user.whattodo.model.*
 import kotlinx.android.synthetic.main.fragment_todo.*
 
 class HomeFragment: TodoFragment() {
@@ -38,6 +35,7 @@ class HomeFragment: TodoFragment() {
                             val generalItem = GeneralItem(todo)
                             consolidatedList.add(generalItem)
                         }
+                        consolidatedList.add(FooterItem())
                     }
                     adapter.notifyDataSetChanged()
                 }

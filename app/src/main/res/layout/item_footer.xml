@@ -3,14 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
+    android:layout_marginBottom="16dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/item_general_todo"
-        android:background="@android:color/white"
-        android:padding="8dp"
+    <View
+        android:background="@drawable/background_footer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="16dp"/>
 
 </android.support.constraint.ConstraintLayout>

@@ -11,7 +11,6 @@ import com.example.user.whattodo.model.ListItem
 import kotlinx.android.synthetic.main.item_general.view.*
 import kotlinx.android.synthetic.main.item_header.view.*
 
-
 class HomeAdapter(private val todo: List<ListItem>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -25,6 +24,10 @@ class HomeAdapter(private val todo: List<ListItem>): RecyclerView.Adapter<Recycl
             ListItem.TYPE_GENERAL -> {
                 val view = inflater.inflate(R.layout.item_general, parent, false)
                 viewHolder = GeneralViewHolder(view)
+            }
+            ListItem.TYPE_FOOTER -> {
+                val view = inflater.inflate(R.layout.item_footer, parent, false)
+                viewHolder = FooterViewHolder(view)
             }
         }
         return viewHolder
@@ -55,6 +58,9 @@ class HomeAdapter(private val todo: List<ListItem>): RecyclerView.Adapter<Recycl
 
     inner class GeneralViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         var todoTextView = itemView.item_general_todo
+    }
+
+    inner class FooterViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
     }
 
 }
