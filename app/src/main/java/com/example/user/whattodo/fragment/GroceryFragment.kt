@@ -5,6 +5,7 @@ import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Gravity
+import android.view.View
 import com.example.user.whattodo.DeleteActionModeCallback
 import com.example.user.whattodo.MainActivity
 import com.example.user.whattodo.R
@@ -49,6 +50,7 @@ class GroceryFragment: TodoFragment() {
                 .subscribe {
                     groceryList.clear()
                     it.forEach { groceryList.add(Todo(it.id, it.todo, it.done, it.type, it.dateTime)) }
+                    emptyView()
                     adapter.notifyDataSetChanged()
                 }
     }
@@ -73,6 +75,15 @@ class GroceryFragment: TodoFragment() {
     override fun destroyActionCallback() {
         adapter.deleteActionMode.actionMode?.finish()
         adapter.deleteActionMode.actionMode = null
+    }
+
+    private fun emptyView() {
+        empty_todo.setImageResource(R.drawable.empty_warehouse)
+        if(groceryList.isEmpty()) {
+            empty_todo.visibility = View.VISIBLE
+        } else {
+            empty_todo.visibility = View.GONE
+        }
     }
 
 }

@@ -11,6 +11,7 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.text.format.DateUtils
 import android.view.Gravity
+import android.view.View
 import com.example.user.whattodo.receiver.AlarmReceiver
 import com.example.user.whattodo.MainActivity
 import com.example.user.whattodo.R
@@ -85,6 +86,7 @@ class ReminderFragment: TodoFragment() {
                 .subscribe {
                     reminderList.clear()
                     it.forEach { reminderList.add(Todo(it.id, it.todo, it.done, it.type, it.dateTime)) }
+                    emptyView()
                     adapter.notifyDataSetChanged()
                 }
     }
@@ -120,6 +122,15 @@ class ReminderFragment: TodoFragment() {
     override fun destroyActionCallback() {
         adapter.deleteActionMode.actionMode?.finish()
         adapter.deleteActionMode.actionMode = null
+    }
+
+    private fun emptyView() {
+        empty_todo.setImageResource(R.drawable.empty_deadline)
+        if(reminderList.isEmpty()) {
+            empty_todo.visibility = View.VISIBLE
+        } else {
+            empty_todo.visibility = View.GONE
+        }
     }
 
 }

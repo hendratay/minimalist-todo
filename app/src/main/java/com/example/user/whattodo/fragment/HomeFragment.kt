@@ -1,6 +1,8 @@
 package com.example.user.whattodo.fragment
 
 import android.support.v7.widget.LinearLayoutManager
+import android.view.View
+import com.example.user.whattodo.R
 import com.example.user.whattodo.adapter.HomeAdapter
 import com.example.user.whattodo.model.*
 import kotlinx.android.synthetic.main.fragment_todo.*
@@ -37,6 +39,7 @@ class HomeFragment: TodoFragment() {
                         }
                         consolidatedList.add(FooterItem())
                     }
+                    emptyView()
                     adapter.notifyDataSetChanged()
                 }
     }
@@ -54,6 +57,15 @@ class HomeFragment: TodoFragment() {
             }
         }
         return groupedHashMap.toList().sortedBy { (key, _) -> key }.toMap()
+    }
+
+    private fun emptyView() {
+        empty_todo.setImageResource(R.drawable.empty_work)
+        if(consolidatedList.isEmpty()) {
+            empty_todo.visibility = View.VISIBLE
+        } else {
+            empty_todo.visibility = View.GONE
+        }
     }
 
 }

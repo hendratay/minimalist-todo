@@ -4,6 +4,7 @@ import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Gravity
+import android.view.View
 import com.example.user.whattodo.MainActivity
 import com.example.user.whattodo.R
 import com.example.user.whattodo.model.Todo
@@ -46,6 +47,7 @@ class TaskFragment: TodoFragment() {
                 .subscribe {
                     taskList.clear()
                     it.forEach { taskList.add(Todo(it.id, it.todo, it.done, it.type, it.dateTime)) }
+                    emptyView()
                     adapter.notifyDataSetChanged()
                 }
     }
@@ -70,6 +72,15 @@ class TaskFragment: TodoFragment() {
     override fun destroyActionCallback() {
         adapter.deleteActionMode.actionMode?.finish()
         adapter.deleteActionMode.actionMode = null
+    }
+
+    private fun emptyView() {
+        empty_todo.setImageResource(R.drawable.empty_thinking)
+        if(taskList.isEmpty()) {
+            empty_todo.visibility = View.VISIBLE
+        } else {
+            empty_todo.visibility = View.GONE
+        }
     }
 
 }
