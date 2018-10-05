@@ -84,10 +84,12 @@ class ReminderFragment: TodoFragment() {
     private fun getReminder() {
         getTodo("Reminder")
                 .subscribe {
-                    reminderList.clear()
-                    it.forEach { reminderList.add(Todo(it.id, it.todo, it.done, it.type, it.dateTime)) }
-                    emptyView()
-                    adapter.notifyDataSetChanged()
+                    if (view != null) {
+                        reminderList.clear()
+                        it.forEach { reminderList.add(Todo(it.id, it.todo, it.done, it.type, it.dateTime)) }
+                        emptyView()
+                        adapter.notifyDataSetChanged()
+                    }
                 }
     }
 

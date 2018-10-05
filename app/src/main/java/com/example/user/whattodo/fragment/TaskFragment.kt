@@ -45,10 +45,12 @@ class TaskFragment: TodoFragment() {
     private fun getTask() {
         getTodo("Task")
                 .subscribe {
-                    taskList.clear()
-                    it.forEach { taskList.add(Todo(it.id, it.todo, it.done, it.type, it.dateTime)) }
-                    emptyView()
-                    adapter.notifyDataSetChanged()
+                    if (view != null) {
+                        taskList.clear()
+                        it.forEach { taskList.add(Todo(it.id, it.todo, it.done, it.type, it.dateTime)) }
+                        emptyView()
+                        adapter.notifyDataSetChanged()
+                    }
                 }
     }
 

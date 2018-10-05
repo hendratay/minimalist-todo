@@ -48,10 +48,12 @@ class GroceryFragment: TodoFragment() {
     private fun getGrocery() {
         getTodo("Grocery")
                 .subscribe {
-                    groceryList.clear()
-                    it.forEach { groceryList.add(Todo(it.id, it.todo, it.done, it.type, it.dateTime)) }
-                    emptyView()
-                    adapter.notifyDataSetChanged()
+                    if (view != null) {
+                        groceryList.clear()
+                        it.forEach { groceryList.add(Todo(it.id, it.todo, it.done, it.type, it.dateTime)) }
+                        emptyView()
+                        adapter.notifyDataSetChanged()
+                    }
                 }
     }
 

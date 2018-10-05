@@ -26,21 +26,23 @@ class HomeFragment: TodoFragment() {
     private fun getTodos() {
         getAllTodo()
                 .subscribe {
-                    consolidatedList.clear()
-                    val todoList: MutableList<Todo> = ArrayList()
-                    it.forEach { todoList.add(Todo(it.id, it.todo, it.done, it.type, it.dateTime)) }
-                    val groupedHashMap: Map<String, MutableList<Todo>> = groupDataIntoHashMap(todoList)
-                    for(type: String in groupedHashMap.keys) {
-                        val typeItem = HeaderItem(type)
-                        consolidatedList.add(typeItem)
-                        for (todo: Todo in groupedHashMap[type]!!) {
-                            val generalItem = GeneralItem(todo)
-                            consolidatedList.add(generalItem)
+                    if (view != null) {
+                        consolidatedList.clear()
+                        val todoList: MutableList<Todo> = ArrayList()
+                        it.forEach { todoList.add(Todo(it.id, it.todo, it.done, it.type, it.dateTime)) }
+                        val groupedHashMap: Map<String, MutableList<Todo>> = groupDataIntoHashMap(todoList)
+                        for(type: String in groupedHashMap.keys) {
+                            val typeItem = HeaderItem(type)
+                            consolidatedList.add(typeItem)
+                            for (todo: Todo in groupedHashMap[type]!!) {
+                                val generalItem = GeneralItem(todo)
+                                consolidatedList.add(generalItem)
+                            }
+                            consolidatedList.add(FooterItem())
                         }
-                        consolidatedList.add(FooterItem())
+                        emptyView()
+                        adapter.notifyDataSetChanged()
                     }
-                    emptyView()
-                    adapter.notifyDataSetChanged()
                 }
     }
 

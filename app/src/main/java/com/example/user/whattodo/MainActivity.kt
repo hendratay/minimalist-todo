@@ -61,36 +61,22 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-                fab_add_todo.setOnClickListener {
-                    when(position) {
-                        1 -> {
-                            val taskFragment = supportFragmentManager
-                                    .findFragmentByTag("android:switcher:${R.id.view_pager}:$position")
-                                    as TaskFragment
-                            taskFragment.addTaskDialog()
-                        }
-                        2 -> {
-                            val reminderFragment = supportFragmentManager
-                                    .findFragmentByTag("android:switcher:${R.id.view_pager}:$position")
-                                    as ReminderFragment
-                            reminderFragment.addReminderDialog()
-                        }
-                        3 -> {
-                            val groceryFragment = supportFragmentManager
-                                    .findFragmentByTag("android:switcher:${R.id.view_pager}:$position")
-                                    as GroceryFragment
-                            groceryFragment.addGroceryDialog()
-                        }
-                    }
-                }
-            }
-
-            override fun onPageSelected(position: Int) {
                 when(position) {
                     0 -> fab_add_todo.hide()
                     1 -> fab_add_todo.show()
                     2 -> fab_add_todo.show()
                     3 -> fab_add_todo.show()
+                }
+            }
+
+            override fun onPageSelected(position: Int) {
+                val fragment = supportFragmentManager.findFragmentByTag("android:switcher:${R.id.view_pager}:$position")
+                fab_add_todo.setOnClickListener {
+                    when(position) {
+                        1 -> (fragment as TaskFragment).addTaskDialog()
+                        2 -> (fragment as ReminderFragment).addReminderDialog()
+                        3 -> (fragment as GroceryFragment).addGroceryDialog()
+                    }
                 }
             }
         })
