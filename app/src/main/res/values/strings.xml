@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">What Todo</string>
+    <string name="about">About</string>
+    <string name="send_feedback">Send Feedback</string>
+    <string name="open_source_license">Open Source License</string>
+    <string name="rate_app">Rate this App</string>
 
     <string name="task">Task</string>
     <string name="reminder">Reminder</string>

@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.view.ViewPager
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import com.example.user.whattodo.adapter.PagerAdapter
 import com.example.user.whattodo.db.TodoDatabase
@@ -24,10 +26,29 @@ class MainActivity : AppCompatActivity() {
         App.component.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         setupToolbar()
         setupNavigation()
         setupAddTodoButton()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when(item?.itemId) {
+            R.id.about -> {
+            }
+            R.id.send_feedback -> {
+            }
+            R.id.open_source_license -> {
+            }
+            R.id.rate_app -> {
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+        return true
     }
 
     private fun setupToolbar() {
