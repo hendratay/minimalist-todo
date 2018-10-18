@@ -2,13 +2,12 @@ package com.example.user.whattodo
 
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.view.ViewPager
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import com.example.user.whattodo.adapter.PagerAdapter
 import com.example.user.whattodo.db.TodoDatabase
 import com.example.user.whattodo.fragment.*
@@ -42,8 +41,7 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.send_feedback -> {
             }
-            R.id.open_source_license -> {
-            }
+            R.id.open_source_license -> startActivity(Intent(this, OpenSourceLicenseActivity::class.java))
             R.id.rate_app -> {
             }
             else -> return super.onOptionsItemSelected(item)
@@ -58,7 +56,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onPause() {
-        onBackPressed()
         super.onPause()
         updateWidget()
     }
