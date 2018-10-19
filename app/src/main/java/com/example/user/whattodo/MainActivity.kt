@@ -37,10 +37,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId) {
-            R.id.about -> {
-            }
-            R.id.send_feedback -> {
-            }
+            R.id.about -> startActivity(Intent(this, AboutActivity::class.java))
+            R.id.send_feedback -> startActivity(Intent(this, SendFeedbackActivity::class.java))
             R.id.open_source_license -> startActivity(Intent(this, OpenSourceLicenseActivity::class.java))
             R.id.rate_app -> {
             }
