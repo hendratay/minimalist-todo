@@ -7,7 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
-import com.example.user.whattodo.MainActivity
+import com.example.user.whattodo.activity.MainActivity
 import com.example.user.whattodo.R
 
 class AlarmReceiver: BroadcastReceiver() {

@@ -5,10 +5,10 @@ import android.graphics.Paint
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
 import android.view.*
-import com.example.user.whattodo.DeleteActionModeCallback
+import com.example.user.whattodo.utils.DeleteActionModeCallback
 import com.example.user.whattodo.R
 import com.example.user.whattodo.model.Todo
-import kotlinx.android.synthetic.main.grocery_list_item.view.*
+import kotlinx.android.synthetic.main.item_grocery.view.*
 
 class GroceryAdapter(private val groceryList: List<Todo>,
                      private val changeListener: (Todo) -> Unit,
@@ -58,7 +58,7 @@ class GroceryAdapter(private val groceryList: List<Todo>,
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GroceryViewHolder {
-        return GroceryViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.grocery_list_item, parent, false))
+        return GroceryViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_grocery, parent, false))
     }
 
     override fun onBindViewHolder(holder: GroceryViewHolder, position: Int) {

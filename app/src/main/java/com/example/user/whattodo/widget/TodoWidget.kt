@@ -6,7 +6,7 @@ import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
-import com.example.user.whattodo.MainActivity
+import com.example.user.whattodo.activity.MainActivity
 import com.example.user.whattodo.R
 import com.example.user.whattodo.App
 import com.example.user.whattodo.db.TodoDatabase
@@ -58,7 +58,7 @@ class TodoWidget : AppWidgetProvider() {
         internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager,
                                      appWidgetId: Int) {
 
-            val views = RemoteViews(context.packageName, R.layout.todo_widget)
+            val views = RemoteViews(context.packageName, R.layout.widget_todo)
 
             val taskIntent = Intent(context, MainActivity::class.java)
             val pendingIntent = PendingIntent.getActivity(context, 0, taskIntent, PendingIntent.FLAG_CANCEL_CURRENT)

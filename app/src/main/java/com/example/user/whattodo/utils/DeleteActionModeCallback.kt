@@ -1,4 +1,4 @@
-package com.example.user.whattodo
+package com.example.user.whattodo.utils
 
 import android.support.v7.view.ActionMode
 import android.support.v7.widget.RecyclerView

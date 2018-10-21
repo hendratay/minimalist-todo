@@ -1,4 +1,4 @@
-package com.example.user.whattodo
+package com.example.user.whattodo.activity
 
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.support.v4.view.ViewPager
 import android.view.Menu
 import android.view.MenuItem
+import com.example.user.whattodo.*
 import com.example.user.whattodo.adapter.PagerAdapter
 import com.example.user.whattodo.db.TodoDatabase
 import com.example.user.whattodo.fragment.*

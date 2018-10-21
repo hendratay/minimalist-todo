@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleTop">
             <intent-filter>
@@ -21,27 +21,27 @@
         </activity>
 
         <activity
-            android:name=".AboutActivity"
+            android:name=".activity.AboutActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".activity.MainActivity" />
         </activity>
 
         <activity
-            android:name=".SendFeedbackActivity"
+            android:name=".activity.SendFeedbackActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".activity.MainActivity" />
         </activity>
 
         <activity
-            android:name=".OpenSourceLicenseActivity"
+            android:name=".activity.OpenSourceLicenseActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".activity.MainActivity" />
         </activity>
 
         <receiver android:name=".receiver.AlarmReceiver" />

@@ -5,7 +5,7 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Gravity
 import android.view.View
-import com.example.user.whattodo.MainActivity
+import com.example.user.whattodo.activity.MainActivity
 import com.example.user.whattodo.R
 import com.example.user.whattodo.model.Todo
 import com.example.user.whattodo.adapter.TaskAdapter

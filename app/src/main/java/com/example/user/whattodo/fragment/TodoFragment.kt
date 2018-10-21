@@ -5,12 +5,11 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.user.whattodo.MainActivity
+import com.example.user.whattodo.activity.MainActivity
 import com.example.user.whattodo.R
 import com.example.user.whattodo.db.TodoEntity
 import com.example.user.whattodo.model.Todo
 import io.reactivex.Flowable
-import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -34,12 +33,6 @@ open class TodoFragment: Fragment() {
 
     fun getTodo(type: String): Flowable<List<TodoEntity>> {
         return (activity as MainActivity).database.todoDao().getTodo(type)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-    }
-
-    fun getAllTodo(): Flowable<List<TodoEntity>> {
-        return (activity as MainActivity).database.todoDao().getAllTodo()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
     }

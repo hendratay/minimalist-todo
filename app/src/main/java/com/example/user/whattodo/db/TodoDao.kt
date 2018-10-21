@@ -2,13 +2,9 @@ package com.example.user.whattodo.db
 
 import android.arch.persistence.room.*
 import io.reactivex.Flowable
-import io.reactivex.Single
 
 @Dao
 interface TodoDao {
-
-    @Query("select * from todo")
-    fun getAllTodo() : Flowable<List<TodoEntity>>
 
     @Query("select * from todo where done == 0")
     fun getAllUndoneTodo() : Flowable<List<TodoEntity>>

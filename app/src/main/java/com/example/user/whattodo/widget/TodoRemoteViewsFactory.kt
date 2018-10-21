@@ -40,7 +40,7 @@ class TodoRemoteViewsFactory(val context: Context, val intent: Intent?): RemoteV
     }
 
     override fun getViewAt(position: Int): RemoteViews {
-        val remoteViews = RemoteViews(context.packageName, R.layout.todo_widget_list_item)
+        val remoteViews = RemoteViews(context.packageName, R.layout.widget_item_todo)
 
         val fillIntent = Intent()
         fillIntent.putExtra(TodoWidget.EXTRA_ITEM, position)

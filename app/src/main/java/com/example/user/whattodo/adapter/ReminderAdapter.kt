@@ -3,13 +3,12 @@ package com.example.user.whattodo.adapter
 import android.graphics.Color
 import android.graphics.Paint
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.view.ActionMode
 import android.support.v7.widget.RecyclerView
 import android.view.*
-import com.example.user.whattodo.DeleteActionModeCallback
+import com.example.user.whattodo.utils.DeleteActionModeCallback
 import com.example.user.whattodo.R
 import com.example.user.whattodo.model.Todo
-import kotlinx.android.synthetic.main.reminder_list_item.view.*
+import kotlinx.android.synthetic.main.item_reminder.view.*
 import java.text.SimpleDateFormat
 
 class ReminderAdapter(private val reminderList: List<Todo>,
@@ -65,7 +64,7 @@ class ReminderAdapter(private val reminderList: List<Todo>,
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReminderViewHolder {
-        return ReminderViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.reminder_list_item, parent, false))
+        return ReminderViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_reminder, parent, false))
     }
 
     override fun onBindViewHolder(holder: ReminderViewHolder, position: Int) {

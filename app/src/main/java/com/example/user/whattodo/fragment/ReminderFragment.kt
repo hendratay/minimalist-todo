@@ -13,7 +13,7 @@ import android.text.format.DateUtils
 import android.view.Gravity
 import android.view.View
 import com.example.user.whattodo.receiver.AlarmReceiver
-import com.example.user.whattodo.MainActivity
+import com.example.user.whattodo.activity.MainActivity
 import com.example.user.whattodo.R
 import com.example.user.whattodo.adapter.ReminderAdapter
 import com.example.user.whattodo.db.TodoEntity

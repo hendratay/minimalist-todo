@@ -1,7 +1,7 @@
 package com.example.user.whattodo.di
 
 import com.example.user.whattodo.App
-import com.example.user.whattodo.MainActivity
+import com.example.user.whattodo.activity.MainActivity
 import com.example.user.whattodo.widget.TodoRemoteViewsFactory
 import com.example.user.whattodo.widget.TodoWidget
 import dagger.Component
