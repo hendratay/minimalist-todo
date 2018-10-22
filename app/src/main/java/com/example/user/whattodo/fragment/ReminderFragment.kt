@@ -6,7 +6,6 @@ import android.app.PendingIntent
 import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.text.format.DateUtils
@@ -18,6 +17,7 @@ import com.example.user.whattodo.R
 import com.example.user.whattodo.adapter.ReminderAdapter
 import com.example.user.whattodo.db.TodoEntity
 import com.example.user.whattodo.model.Todo
+import com.example.user.whattodo.utils.snackBar
 import kotlinx.android.synthetic.main.dialog_add_reminder.view.*
 import kotlinx.android.synthetic.main.fragment_todo.*
 import java.text.SimpleDateFormat
@@ -102,9 +102,7 @@ class ReminderFragment: TodoFragment() {
     private fun onItemDeleted(selected: List<Int>) {
         deleteTodo(selected, reminderList)
         getReminder()
-        val snackBar = Snackbar.make(coordinator_layout, "${selected.size} item deleted", Snackbar.LENGTH_SHORT)
-        snackBar.show()
-        snackBar.setAction("UNDO") {
+        snackBar(coordinator_layout, "${selected.size} item deleted", "UNDO") {
             undoDeleteTodo()
             getReminder()
         }

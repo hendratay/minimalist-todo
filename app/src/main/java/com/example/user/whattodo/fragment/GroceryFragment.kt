@@ -1,6 +1,5 @@
 package com.example.user.whattodo.fragment
 
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Gravity
@@ -10,6 +9,7 @@ import com.example.user.whattodo.R
 import com.example.user.whattodo.adapter.GroceryAdapter
 import com.example.user.whattodo.db.TodoEntity
 import com.example.user.whattodo.model.Todo
+import com.example.user.whattodo.utils.snackBar
 import kotlinx.android.synthetic.main.dialog_add_grocery.view.*
 import kotlinx.android.synthetic.main.fragment_todo.*
 
@@ -64,9 +64,7 @@ class GroceryFragment: TodoFragment() {
     private fun onItemDeleted(selected: List<Int>) {
         deleteTodo(selected, groceryList)
         getGrocery()
-        val snackBar = Snackbar.make(coordinator_layout, "${selected.size} item deleted", Snackbar.LENGTH_SHORT)
-        snackBar.show()
-        snackBar.setAction("UNDO") {
+        snackBar(coordinator_layout, "${selected.size} item deleted", "UNDO") {
             undoDeleteTodo()
             getGrocery()
         }
