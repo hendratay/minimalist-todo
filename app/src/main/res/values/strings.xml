@@ -16,4 +16,6 @@
     <string name="remind_me_about">Remind me about...</string>
 
     <string name="date_utils_time_now">Now</string>
+
+    <string name="label_progress_dialog">Sending</string>
 </resources>
