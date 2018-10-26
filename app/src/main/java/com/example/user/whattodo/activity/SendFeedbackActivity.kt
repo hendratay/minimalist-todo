@@ -1,5 +1,6 @@
 package com.example.user.whattodo.activity
 
+import android.content.IntentSender
 import android.os.Bundle
 import android.support.v4.app.NavUtils
 import android.support.v7.app.AlertDialog
@@ -8,6 +9,10 @@ import android.view.MenuItem
 import com.example.user.whattodo.BuildConfig
 import com.example.user.whattodo.R
 import com.example.user.whattodo.utils.Gmail
+import com.google.android.gms.auth.api.credentials.CredentialPickerConfig
+import com.google.android.gms.auth.api.credentials.Credentials
+import com.google.android.gms.auth.api.credentials.HintRequest
+import com.google.android.gms.auth.api.credentials.IdentityProviders
 import kotlinx.android.synthetic.main.activity_send_feedback.*
 import kotlin.concurrent.thread
 
@@ -18,6 +23,7 @@ class SendFeedbackActivity : AppCompatActivity() {
         setContentView(R.layout.activity_send_feedback)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        setupTextFrom()
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -30,6 +36,22 @@ class SendFeedbackActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         NavUtils.navigateUpFromSameTask(this)
+    }
+
+    private fun setupTextFrom() {
+        val mCredentialsClient = Credentials.getClient(this)
+        val hintRequest = HintRequest.Builder()
+                .setHintPickerConfig(CredentialPickerConfig.Builder()
+                        .setShowCancelButton(false)
+                        .build())
+                .setEmailAddressIdentifierSupported(true)
+                .setAccountTypes(IdentityProviders.GOOGLE)
+                .build()
+        val intent = mCredentialsClient.getHintPickerIntent(hintRequest)
+        try {
+            startIntentSenderForResult(intent.intentSender, 1, null, 0, 0, 0)
+        } catch (e: IntentSender.SendIntentException) {
+        }
     }
 
     private fun sendFeedback() {
