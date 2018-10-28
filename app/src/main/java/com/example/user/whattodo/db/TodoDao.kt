@@ -20,4 +20,11 @@ interface TodoDao {
 
     @Delete
     fun deleteTodo(todo : TodoEntity)
+
+    @Query("select COUNT(type) from todo where type == :type")
+    fun getTodoCount(type: String) : Flowable<Int>
+
+    @Query("select COUNT(type) from todo where type == :type AND done == 1")
+    fun getDoneTodoCount(type: String) : Flowable<Int>
+
 }
