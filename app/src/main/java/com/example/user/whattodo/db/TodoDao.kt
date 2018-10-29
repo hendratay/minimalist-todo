@@ -21,6 +21,9 @@ interface TodoDao {
     @Delete
     fun deleteTodo(todo : TodoEntity)
 
+    @Query("select DISTINCT type from todo")
+    fun getTodoType() : Flowable<List<String>>
+
     @Query("select COUNT(type) from todo where type == :type")
     fun getTodoCount(type: String) : Flowable<Int>
 

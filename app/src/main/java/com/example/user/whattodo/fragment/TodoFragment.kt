@@ -31,6 +31,12 @@ open class TodoFragment: Fragment() {
     open fun setupRecyclerView() {
     }
 
+    fun getTodoType(): Flowable<List<String>> {
+        return (activity as MainActivity).database.todoDao().getTodoType()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+    }
+
     fun getTodo(type: String): Flowable<List<TodoEntity>> {
         return (activity as MainActivity).database.todoDao().getTodo(type)
                 .subscribeOn(Schedulers.io())
