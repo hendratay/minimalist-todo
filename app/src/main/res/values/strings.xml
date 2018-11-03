@@ -12,8 +12,9 @@
     <string name="add_task">Add Task</string>
     <string name="add_reminder">Add Reminder</string>
     <string name="add_grocery">Add Grocery</string>
-
-    <string name="remind_me_about">Remind me about...</string>
+    <string name="input_task">Enter Task...</string>
+    <string name="input_reminder">Remind me about...</string>
+    <string name="input_grocery">Enter Grocery...</string>
 
     <string name="date_utils_time_now">Now</string>
 
