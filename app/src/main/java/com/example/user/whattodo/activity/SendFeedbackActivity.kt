@@ -9,14 +9,16 @@ import android.view.MenuItem
 import com.example.user.whattodo.BuildConfig
 import com.example.user.whattodo.R
 import com.example.user.whattodo.utils.Gmail
-import com.google.android.gms.auth.api.credentials.CredentialPickerConfig
-import com.google.android.gms.auth.api.credentials.Credentials
-import com.google.android.gms.auth.api.credentials.HintRequest
-import com.google.android.gms.auth.api.credentials.IdentityProviders
+import com.google.android.gms.auth.GoogleAuthUtil
+import com.google.android.gms.common.AccountPicker
 import kotlinx.android.synthetic.main.activity_send_feedback.*
 import kotlin.concurrent.thread
 
 class SendFeedbackActivity : AppCompatActivity() {
+
+    companion object {
+        const val REQUEST_CODE_EMAIL = 1
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,17 +41,12 @@ class SendFeedbackActivity : AppCompatActivity() {
     }
 
     private fun setupTextFrom() {
-        val mCredentialsClient = Credentials.getClient(this)
-        val hintRequest = HintRequest.Builder()
-                .setHintPickerConfig(CredentialPickerConfig.Builder()
-                        .setShowCancelButton(false)
-                        .build())
-                .setEmailAddressIdentifierSupported(true)
-                .setAccountTypes(IdentityProviders.GOOGLE)
-                .build()
-        val intent = mCredentialsClient.getHintPickerIntent(hintRequest)
         try {
-            startIntentSenderForResult(intent.intentSender, 1, null, 0, 0, 0)
+            val intent = AccountPicker.newChooseAccountIntent(
+                    null, null, arrayOf(GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE), true,
+                    null, null, null, null)
+            intent.putExtra("overrideTheme", 1)
+            startActivityForResult(intent, REQUEST_CODE_EMAIL)
         } catch (e: IntentSender.SendIntentException) {
         }
     }
