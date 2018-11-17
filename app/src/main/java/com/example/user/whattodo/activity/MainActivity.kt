@@ -1,8 +1,12 @@
 package com.example.user.whattodo.activity
 
+import android.annotation.TargetApi
 import android.appwidget.AppWidgetManager
+import android.content.ActivityNotFoundException
 import android.content.ComponentName
 import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.view.ViewPager
@@ -13,7 +17,7 @@ import com.example.user.whattodo.adapter.PagerAdapter
 import com.example.user.whattodo.db.TodoDatabase
 import com.example.user.whattodo.fragment.*
 import com.example.user.whattodo.widget.TodoWidget
-import kotlinx.android.synthetic.main.activity_main.*;
+import kotlinx.android.synthetic.main.activity_main.*
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -41,8 +45,7 @@ class MainActivity : AppCompatActivity() {
             R.id.about -> startActivity(Intent(this, AboutActivity::class.java))
             R.id.send_feedback -> startActivity(Intent(this, SendFeedbackActivity::class.java))
             R.id.open_source_license -> startActivity(Intent(this, OpenSourceLicenseActivity::class.java))
-            R.id.rate_app -> {
-            }
+            R.id.rate_app -> { openGooglePlayStore() }
             else -> return super.onOptionsItemSelected(item)
         }
         return true
@@ -101,7 +104,23 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateWidget() {
         val ids = AppWidgetManager.getInstance(application).getAppWidgetIds(ComponentName(application, TodoWidget::class.java))
-        AppWidgetManager.getInstance(this).notifyAppWidgetViewDataChanged(ids, R.id.appwidget_list_view);
+        AppWidgetManager.getInstance(this).notifyAppWidgetViewDataChanged(ids, R.id.appwidget_list_view)
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private fun openGooglePlayStore() {
+        val uri = Uri.parse("market://details?id=${this.packageName}")
+        val goToMarket = Intent(Intent.ACTION_VIEW, uri)
+        goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY or
+                Intent.FLAG_ACTIVITY_NEW_DOCUMENT or
+                Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+        try {
+            startActivity(goToMarket)
+        } catch (e: ActivityNotFoundException) {
+            startActivity(Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://play.google.com/store/apps/details?id=${this.packageName}")))
+        }
     }
 
 }
