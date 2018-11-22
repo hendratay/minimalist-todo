@@ -1,5 +1,8 @@
 package com.example.user.whattodo.activity
 
+import android.accounts.AccountManager
+import android.app.Activity
+import android.content.Intent
 import android.content.IntentSender
 import android.os.Bundle
 import android.support.v4.app.NavUtils
@@ -34,6 +37,17 @@ class SendFeedbackActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
         return true
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if(requestCode == REQUEST_CODE_EMAIL) {
+            when (resultCode) {
+                Activity.RESULT_OK -> {
+                    val email = data?.getStringExtra(AccountManager.KEY_ACCOUNT_NAME)
+                }
+                Activity.RESULT_CANCELED -> finish()
+            }
+        }
     }
 
     override fun onBackPressed() {
