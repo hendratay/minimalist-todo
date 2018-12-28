@@ -1,9 +1,9 @@
 package com.example.user.whattodo.fragment
 
-import android.annotation.SuppressLint
 import android.support.v7.widget.LinearLayoutManager
 import com.example.user.whattodo.adapter.HomeAdapter
 import kotlinx.android.synthetic.main.fragment_todo.*
+import io.reactivex.disposables.CompositeDisposable
 
 class HomeFragment: TodoFragment() {
 
@@ -11,6 +11,8 @@ class HomeFragment: TodoFragment() {
     private val todoType: MutableList<String> = ArrayList()
     private val todoCount: MutableList<Int> = ArrayList()
     private var todoDoneCount: MutableList<Int> = ArrayList()
+
+    var compositeDisposable = CompositeDisposable()
 
     override fun setupRecyclerView() {
         adapter = HomeAdapter(todoType, todoCount, todoDoneCount)
@@ -23,9 +25,13 @@ class HomeFragment: TodoFragment() {
         getType()
     }
 
-    @SuppressLint("CheckResult")
+    override fun onDestroy() {
+        super.onDestroy()
+        compositeDisposable.dispose()
+    }
+
     private fun getType() {
-        getTodoType()
+        val typeDisposable = getTodoType()
                 .subscribe { todo ->
                     todoType.clear()
                     todo.forEach { todoType.add(it) }
@@ -33,27 +39,28 @@ class HomeFragment: TodoFragment() {
                     todoCount()
                     doneTodoCount()
                 }
+        compositeDisposable.add(typeDisposable)
     }
 
-    @SuppressLint("CheckResult")
     private fun todoCount() {
         for(allType in 0..(todoType.size - 1)) {
-            getTodoCount(todoType[allType])
+            val countDisposable = getTodoCount(todoType[allType])
                     .subscribe {
                         todoCount.add(allType, it)
                         adapter.notifyDataSetChanged()
                     }
+            compositeDisposable.add(countDisposable)
         }
     }
 
-    @SuppressLint("CheckResult")
     private fun doneTodoCount() {
         for(allType in 0..(todoType.size - 1)) {
-            getTodoDoneCount(todoType[allType])
+            val doneCountDisposable = getTodoDoneCount(todoType[allType])
                     .subscribe {
                         todoDoneCount.add(allType, it)
                         adapter.notifyDataSetChanged()
                     }
+            compositeDisposable.addAll(doneCountDisposable)
         }
     }
 

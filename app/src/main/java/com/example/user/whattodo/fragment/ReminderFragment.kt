@@ -18,6 +18,7 @@ import com.example.user.whattodo.adapter.ReminderAdapter
 import com.example.user.whattodo.db.TodoEntity
 import com.example.user.whattodo.model.Todo
 import com.example.user.whattodo.utils.snackBar
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.dialog_add_reminder.view.*
 import kotlinx.android.synthetic.main.fragment_todo.*
 import java.text.SimpleDateFormat
@@ -30,9 +31,16 @@ class ReminderFragment: TodoFragment() {
     private var notificationId = 0
     private lateinit var alarmManager: AlarmManager
 
+    var compositeDisposable = CompositeDisposable()
+
     override fun onStart() {
         super.onStart()
         getReminder()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        compositeDisposable.dispose()
     }
 
     override fun setupRecyclerView() {
@@ -82,7 +90,7 @@ class ReminderFragment: TodoFragment() {
     }
 
     private fun getReminder() {
-        getTodo("Reminder")
+        val disposable = getTodo("Reminder")
                 .subscribe {
                     if (view != null) {
                         reminderList.clear()
@@ -91,6 +99,7 @@ class ReminderFragment: TodoFragment() {
                         adapter.notifyDataSetChanged()
                     }
                 }
+        compositeDisposable.add(disposable)
     }
 
     private fun onItemChecked(todo: Todo) {

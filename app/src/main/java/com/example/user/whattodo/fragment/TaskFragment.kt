@@ -10,6 +10,7 @@ import com.example.user.whattodo.model.Todo
 import com.example.user.whattodo.adapter.TaskAdapter
 import com.example.user.whattodo.db.TodoEntity
 import com.example.user.whattodo.utils.snackBar
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.dialog_add_task.view.*
 import kotlinx.android.synthetic.main.fragment_todo.*
 
@@ -18,9 +19,16 @@ class TaskFragment: TodoFragment() {
     private lateinit var adapter: TaskAdapter
     private var taskList: MutableList<Todo> = ArrayList()
 
+    var compositeDisposable = CompositeDisposable()
+
     override fun onStart() {
         super.onStart()
         getTask()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        compositeDisposable.dispose()
     }
 
     override fun setupRecyclerView() {
@@ -43,7 +51,7 @@ class TaskFragment: TodoFragment() {
     }
 
     private fun getTask() {
-        getTodo("Task")
+        val disposable = getTodo("Task")
                 .subscribe {
                     if (view != null) {
                         taskList.clear()
@@ -52,6 +60,7 @@ class TaskFragment: TodoFragment() {
                         adapter.notifyDataSetChanged()
                     }
                 }
+        compositeDisposable.add(disposable)
     }
 
     private fun onItemChecked(todo: Todo) {

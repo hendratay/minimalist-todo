@@ -10,6 +10,7 @@ import com.example.user.whattodo.adapter.GroceryAdapter
 import com.example.user.whattodo.db.TodoEntity
 import com.example.user.whattodo.model.Todo
 import com.example.user.whattodo.utils.snackBar
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.dialog_add_grocery.view.*
 import kotlinx.android.synthetic.main.fragment_todo.*
 
@@ -18,9 +19,16 @@ class GroceryFragment: TodoFragment() {
     private lateinit var adapter: GroceryAdapter
     private var groceryList: MutableList<Todo> = ArrayList()
 
+    var compositeDisposable = CompositeDisposable()
+
     override fun onStart() {
         super.onStart()
         getGrocery()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        compositeDisposable.dispose()
     }
 
     override fun setupRecyclerView() {
@@ -44,7 +52,7 @@ class GroceryFragment: TodoFragment() {
 
 
     private fun getGrocery() {
-        getTodo("Grocery")
+        val disposable = getTodo("Grocery")
                 .subscribe {
                     if (view != null) {
                         groceryList.clear()
@@ -53,6 +61,7 @@ class GroceryFragment: TodoFragment() {
                         adapter.notifyDataSetChanged()
                     }
                 }
+        compositeDisposable.add(disposable)
     }
 
     private fun onItemChecked(todo: Todo) {
