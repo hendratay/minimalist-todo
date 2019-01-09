@@ -22,46 +22,11 @@ class HomeFragment: TodoFragment() {
 
     override fun onStart() {
         super.onStart()
-        getType()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         compositeDisposable.dispose()
-    }
-
-    private fun getType() {
-        val typeDisposable = getTodoType()
-                .subscribe { todo ->
-                    todoType.clear()
-                    todo.forEach { todoType.add(it) }
-                    adapter.notifyDataSetChanged()
-                    todoCount()
-                    doneTodoCount()
-                }
-        compositeDisposable.add(typeDisposable)
-    }
-
-    private fun todoCount() {
-        for(allType in 0..(todoType.size - 1)) {
-            val countDisposable = getTodoCount(todoType[allType])
-                    .subscribe {
-                        todoCount.add(allType, it)
-                        adapter.notifyDataSetChanged()
-                    }
-            compositeDisposable.add(countDisposable)
-        }
-    }
-
-    private fun doneTodoCount() {
-        for(allType in 0..(todoType.size - 1)) {
-            val doneCountDisposable = getTodoDoneCount(todoType[allType])
-                    .subscribe {
-                        todoDoneCount.add(allType, it)
-                        adapter.notifyDataSetChanged()
-                    }
-            compositeDisposable.addAll(doneCountDisposable)
-        }
     }
 
 }
