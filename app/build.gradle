@@ -24,7 +24,7 @@ def getProperty(String filename, String propName) {
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "com.example.user.whattodo"
+        applicationId "com.minimalist.todo"
         minSdkVersion 15
         targetSdkVersion 27
         versionCode 1
