@@ -1,8 +1,8 @@
 package com.minimalist.todo.di
 
 import android.app.Application
-import android.arch.persistence.room.Room
 import android.content.Context
+import androidx.room.Room
 import com.minimalist.todo.db.TodoDatabase
 import dagger.Module
 import dagger.Provides

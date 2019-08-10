@@ -1,9 +1,9 @@
 package com.minimalist.todo.utils
 
-import android.support.v7.view.ActionMode
-import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.view.ActionMode
+import androidx.recyclerview.widget.RecyclerView
 import com.minimalist.todo.model.Todo
 
 class DeleteActionModeCallback(var actionMode: ActionMode?,

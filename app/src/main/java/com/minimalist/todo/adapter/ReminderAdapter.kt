@@ -2,9 +2,9 @@ package com.minimalist.todo.adapter
 
 import android.graphics.Color
 import android.graphics.Paint
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.RecyclerView
 import android.view.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.RecyclerView
 import com.minimalist.todo.utils.DeleteActionModeCallback
 import com.minimalist.todo.R
 import com.minimalist.todo.model.Todo

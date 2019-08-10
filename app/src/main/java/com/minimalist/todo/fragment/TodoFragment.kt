@@ -1,10 +1,10 @@
 package com.minimalist.todo.fragment
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.minimalist.todo.activity.MainActivity
 import com.minimalist.todo.R
 import com.minimalist.todo.db.TodoEntity

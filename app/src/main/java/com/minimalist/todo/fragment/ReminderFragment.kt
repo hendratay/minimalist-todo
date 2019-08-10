@@ -6,11 +6,11 @@ import android.app.PendingIntent
 import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
-import android.support.v7.app.AlertDialog
-import android.support.v7.widget.LinearLayoutManager
 import android.text.format.DateUtils
 import android.view.Gravity
 import android.view.View
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.minimalist.todo.receiver.AlarmReceiver
 import com.minimalist.todo.activity.MainActivity
 import com.minimalist.todo.R

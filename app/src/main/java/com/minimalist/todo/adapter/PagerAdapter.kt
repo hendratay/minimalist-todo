@@ -1,8 +1,8 @@
 package com.minimalist.todo.adapter
 
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
 import com.minimalist.todo.fragment.GroceryFragment
 import com.minimalist.todo.fragment.HomeFragment
 import com.minimalist.todo.fragment.ReminderFragment

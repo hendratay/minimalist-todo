@@ -1,9 +1,9 @@
 package com.minimalist.todo.fragment
 
-import android.support.v7.app.AlertDialog
-import android.support.v7.widget.LinearLayoutManager
 import android.view.Gravity
 import android.view.View
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.minimalist.todo.activity.MainActivity
 import com.minimalist.todo.R
 import com.minimalist.todo.adapter.GroceryAdapter
