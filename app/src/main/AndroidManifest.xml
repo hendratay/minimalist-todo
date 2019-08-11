@@ -32,14 +32,6 @@
         </activity>
 
         <activity
-            android:name="com.minimalist.todo.activity.SendFeedbackActivity"
-            android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.minimalist.todo.activity.MainActivity" />
-        </activity>
-
-        <activity
             android:name="com.minimalist.todo.activity.OpenSourceLicenseActivity"
             android:screenOrientation="portrait">
             <meta-data

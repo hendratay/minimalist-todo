@@ -48,11 +48,9 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.about -> startActivity(Intent(this, AboutActivity::class.java))
-            R.id.send_feedback -> startActivity(Intent(this, SendFeedbackActivity::class.java))
             R.id.open_source_license -> startActivity(Intent(this, OpenSourceLicenseActivity::class.java))
-            R.id.rate_app -> {
-                openGooglePlayStore()
-            }
+            R.id.send_feedback -> openGithubIssues()
+            R.id.rate_app -> openGooglePlayStore()
             else -> return super.onOptionsItemSelected(item)
         }
         return true
@@ -112,6 +110,11 @@ class MainActivity : AppCompatActivity() {
     private fun updateWidget() {
         val ids = AppWidgetManager.getInstance(application).getAppWidgetIds(ComponentName(application, TodoWidget::class.java))
         AppWidgetManager.getInstance(this).notifyAppWidgetViewDataChanged(ids, R.id.appwidget_list_view)
+    }
+
+    private fun openGithubIssues() {
+        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/hendratay/minimalist-todo/issues"))
+        startActivity(browserIntent)
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)

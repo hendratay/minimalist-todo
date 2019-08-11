@@ -6,21 +6,6 @@ apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'kotlin-kapt'
 
-def getProperty(String filename, String propName) {
-    def propsFile = rootProject.file(filename)
-    if (propsFile.exists()) {
-        def props = new Properties()
-        props.load(new FileInputStream(propsFile))
-        if (props[propName] != null) {
-            return props[propName]
-        } else {
-            print("No such property " + propName + " in file " + filename);
-        }
-    } else {
-        print(filename + " does not exist!")
-    }
-}
-
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -30,9 +15,6 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        buildConfigField "String", "APP_GMAIL", "\"${getProperty("local.properties", "app_gmail")}\""
-        buildConfigField "String", "APP_GMAIL_PASS", "\"${getProperty("local.properties", "app_gmail_pass")}\""
-        buildConfigField "String", "CUSTOMER_SERVICE_GMAIL", "\"${getProperty("local.properties", "customer_service_gmail")}\""
     }
     buildTypes {
         release {
@@ -44,9 +26,6 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation files('libs/activation.jar')
-    implementation files('libs/additionnal.jar')
-    implementation files('libs/mail.jar')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation "com.android.support:support-compat:28.0.0"
