@@ -35,14 +35,14 @@ class TodoWidget : AppWidgetProvider() {
         if (intent?.action == UPDATE_ACTION) {
             val viewIndex = intent.getIntExtra(EXTRA_ITEM, 0)
             val todo = TodoRemoteViewsFactory.widgetList[viewIndex]
-            val entity = TodoEntity(todo.todoId, todo.todoText, true, todo.type, todo.date)
+            val entity = TodoEntity(todo.todoId, todo.todoText, true)
             Single.fromCallable { database.todoDao().updateTodo(entity) }.subscribe()
             TodoRemoteViewsFactory.widgetList.removeAt(viewIndex)
 
             // notify widget adapter
             val appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
                     AppWidgetManager.INVALID_APPWIDGET_ID)
-            AppWidgetManager.getInstance(context).notifyAppWidgetViewDataChanged(appWidgetId, R.id.appwidget_list_view);
+            AppWidgetManager.getInstance(context).notifyAppWidgetViewDataChanged(appWidgetId, R.id.appwidget_list_view)
         }
         super.onReceive(context, intent)
     }
@@ -52,8 +52,8 @@ class TodoWidget : AppWidgetProvider() {
 
     companion object {
 
-        const val EXTRA_ITEM = "com.example.user.whattodo.widget.EXTRA_ITEM"
-        const val UPDATE_ACTION = "com.example.user.whattodo.widget.UPDATE_ACTION"
+        const val EXTRA_ITEM = "com.minimalist.todo.widget.EXTRA_ITEM"
+        const val UPDATE_ACTION = "com.minimalist.todo.widget.UPDATE_ACTION"
 
         internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager,
                                      appWidgetId: Int) {

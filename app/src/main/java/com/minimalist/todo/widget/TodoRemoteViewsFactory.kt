@@ -45,12 +45,6 @@ class TodoRemoteViewsFactory(val context: Context, val intent: Intent?): RemoteV
         val fillIntent = Intent()
         fillIntent.putExtra(TodoWidget.EXTRA_ITEM, position)
         remoteViews.setOnClickFillInIntent(R.id.appwidget_list_item, fillIntent)
-
-        when(widgetList[position].type) {
-            context.getString(R.string.task) -> remoteViews.setImageViewResource(R.id.appwidget_list_item_icon, R.drawable.ic_send_black_24dp)
-            context.getString(R.string.reminder) -> remoteViews.setImageViewResource(R.id.appwidget_list_item_icon, R.drawable.ic_event_available_black_24dp)
-            context.getString(R.string.grocery) -> remoteViews.setImageViewResource(R.id.appwidget_list_item_icon, R.drawable.ic_shopping_cart_black_24dp)
-        }
         remoteViews.setTextViewText(R.id.appwidget_list_item_text, widgetList[position].todoText.capitalize())
 
         return remoteViews
@@ -69,11 +63,13 @@ class TodoRemoteViewsFactory(val context: Context, val intent: Intent?): RemoteV
     }
 
     private fun updateWidgetListView() {
-        database.todoDao().getAllUndoneTodo()
+/*
+        database.todoDao().getTodo()
                 .subscribe {
                     widgetList.clear()
-                    it.forEach { widgetList.add(Todo(it.id, it.todo, it.done, it.type, it.dateTime)) }
+                    it.forEach { widgetList.add(Todo(it.id, it.todo, it.done)) }
                 }
+*/
     }
 
 }

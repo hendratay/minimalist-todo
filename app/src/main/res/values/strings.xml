@@ -5,16 +5,5 @@
     <string name="open_source_license">Open Source License</string>
     <string name="rate_app">Rate this App</string>
 
-    <string name="task">Task</string>
-    <string name="reminder">Reminder</string>
-    <string name="grocery">Grocery</string>
-
-    <string name="add_task">Add Task</string>
-    <string name="add_reminder">Add Reminder</string>
-    <string name="add_grocery">Add Grocery</string>
-    <string name="input_task">Enter Task...</string>
-    <string name="input_reminder">Remind me about...</string>
-    <string name="input_grocery">Enter Grocery...</string>
-
-    <string name="date_utils_time_now">Now</string>
+    <string name="input_todo">Enter Todo…</string>
 </resources>
