@@ -3,10 +3,8 @@
 Todo app that build using ROOM architecture components as the database
 
 ### Todo
-- [ ] UI (Font, Icon)
+- [ ] UI (Font)
 - [ ] About Page
-- [ ] Send Feedback
-- [ ] Dark Mode
 - [ ] More Open Source Licenses
 - [ ] Attribution
 - [ ] Add License
