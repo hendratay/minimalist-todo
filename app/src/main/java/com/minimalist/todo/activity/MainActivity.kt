@@ -73,6 +73,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupToolbar() {
         val sdf = SimpleDateFormat("EEEE, MMMM dd", Locale.getDefault())
         toolbar_title.text = sdf.format(Date(Calendar.getInstance().timeInMillis))
+        toolbar.overflowIcon = resources.getDrawable(R.drawable.ic_settings_black_24dp)
         setSupportActionBar(toolbar)
     }
 
