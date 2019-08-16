@@ -1,11 +1,15 @@
 package com.minimalist.todo.activity
 
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.minimalist.todo.App
 import com.minimalist.todo.R
@@ -30,7 +34,7 @@ class MainActivity : AppCompatActivity() {
     private val backup: MutableList<TodoEntity> = ArrayList()
     private lateinit var adapter: TodoAdapter
     private var todoList: MutableList<Todo> = ArrayList()
-    var compositeDisposable = CompositeDisposable()
+    private var compositeDisposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         App.component.inject(this)
@@ -42,6 +46,16 @@ class MainActivity : AppCompatActivity() {
         getTodo()
     }
 
+    override fun onResume() {
+        super.onResume()
+        edit_text_todo.requestFocus()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        compositeDisposable.dispose()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         return super.onCreateOptionsMenu(menu)
@@ -49,6 +63,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
+            android.R.id.home -> toolbar.showOverflowMenu()
             R.id.about -> startActivity(Intent(this, AboutActivity::class.java))
             R.id.open_source_license -> startActivity(Intent(this, OpenSourceLicenseActivity::class.java))
             R.id.send_feedback -> openGithubIssues()
@@ -58,22 +73,12 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        compositeDisposable.dispose()
-    }
-
-/*
-    private fun updateWidget() {
-        val ids = AppWidgetManager.getInstance(application).getAppWidgetIds(ComponentName(application, TodoWidget::class.java))
-        AppWidgetManager.getInstance(this).notifyAppWidgetViewDataChanged(ids, R.id.appwidget_list_view)
-    }
-*/
-
     private fun setupToolbar() {
-        val sdf = SimpleDateFormat("EEEE, MMMM dd", Locale.getDefault())
-        toolbar_title.text = sdf.format(Date(Calendar.getInstance().timeInMillis))
-        toolbar.overflowIcon = resources.getDrawable(R.drawable.ic_settings_black_24dp)
+        val sdfDay = SimpleDateFormat("EEEE", Locale.US)
+        val sdfDate = SimpleDateFormat("dd MMMM YYYY", Locale.US)
+        toolbar_day.text = sdfDay.format(Date())
+        toolbar_date.text = sdfDate.format(Date())
+        toolbar.overflowIcon = ContextCompat.getDrawable(this, R.drawable.ic_more_vert_black_24dp)
         setSupportActionBar(toolbar)
     }
 
@@ -89,9 +94,35 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupTodoRecyclerView() {
-        adapter = TodoAdapter(todoList, { todo: Todo -> onItemChecked(todo) }, { todoList: List<Int> -> onItemDeleted(todoList) })
+        adapter = TodoAdapter(todoList, { todo: Todo -> onItemChecked(todo) }, { todoList: Todo -> onItemDeleted(todoList) })
         recycler_view_todo.layoutManager = LinearLayoutManager(this)
         recycler_view_todo.adapter = adapter
+    }
+
+    private fun setupAddTodo() {
+        edit_text_todo.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) addTodo()
+            false
+        }
+        button_add_todo.setOnClickListener { view ->
+            addTodo()
+            val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+        }
+    }
+
+    private fun onItemChecked(todo: Todo) {
+        if (!recycler_view_todo.isComputingLayout) {
+            if (todo.done) updateTodo(todo, false) else updateTodo(todo, true)
+        }
+    }
+
+    private fun onItemDeleted(item: Todo) {
+        deleteTodo(item)
+        snackBar(main_layout, "${item.todoText} deleted", "UNDO") {
+            undoDeleteTodo()
+            getTodo()
+        }
     }
 
     private fun getTodo() {
@@ -106,12 +137,10 @@ class MainActivity : AppCompatActivity() {
         compositeDisposable.add(disposable)
     }
 
-    private fun setupAddTodo() {
-        button_add_todo.setOnClickListener {
-            if (edit_text_todo.text.isNotBlank()) {
-                database.todoDao().insertTodo(TodoEntity(edit_text_todo.text.toString(), false))
-                edit_text_todo.text.clear()
-            }
+    private fun addTodo() {
+        if (edit_text_todo.text.isNotBlank()) {
+            database.todoDao().insertTodo(TodoEntity(edit_text_todo.text.toString(), false))
+            edit_text_todo.text.clear()
         }
     }
 
@@ -123,41 +152,24 @@ class MainActivity : AppCompatActivity() {
                 .subscribe()
     }
 
-    private fun deleteTodo(selected: List<Int>, todoList: List<Todo>) {
+    private fun deleteTodo(item: Todo) {
         backup.clear()
-        selected.forEach {
-            val entity = TodoEntity(todoList[it].todoId, todoList[it].todoText, todoList[it].done)
-            backup.add(entity)
-            Single.fromCallable { database.todoDao().deleteTodo(entity) }
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe()
-        }
+        val entity = TodoEntity(item.todoId, item.todoText, item.done)
+        backup.add(entity)
+        Single.fromCallable { database.todoDao().deleteTodo(entity) }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe()
     }
 
     private fun undoDeleteTodo() {
         backup.forEach { database.todoDao().insertTodo(it) }
     }
 
-    private fun onItemChecked(todo: Todo) {
-        if (!recycler_view_todo.isComputingLayout) {
-            if (todo.done) updateTodo(todo, false) else updateTodo(todo, true)
-        }
-    }
-
-    private fun onItemDeleted(selected: List<Int>) {
-        deleteTodo(selected, todoList)
-        getTodo()
-        snackBar(main_view, "${selected.size} item deleted", "UNDO") {
-            undoDeleteTodo()
-            getTodo()
-        }
-    }
-
 /*
-    private fun destroyActionCallback() {
-        adapter.deleteActionMode.actionMode?.finish()
-        adapter.deleteActionMode.actionMode = null
+    private fun updateWidget() {
+        val ids = AppWidgetManager.getInstance(application).getAppWidgetIds(ComponentName(application, TodoWidget::class.java))
+        AppWidgetManager.getInstance(this).notifyAppWidgetViewDataChanged(ids, R.id.appwidget_list_view)
     }
 */
 

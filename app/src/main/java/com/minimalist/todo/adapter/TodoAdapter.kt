@@ -1,65 +1,38 @@
 package com.minimalist.todo.adapter
 
-import android.graphics.Color
 import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.minimalist.todo.R
 import com.minimalist.todo.model.Todo
-import com.minimalist.todo.utils.DeleteActionModeCallback
 import kotlinx.android.synthetic.main.item_todo.view.*
 
-class TodoAdapter(val items: MutableList<Todo>,
+class TodoAdapter(private val items: MutableList<Todo>,
                   private val changeListener: ((Todo) -> Unit)?,
-                  deleteTodoListener: (List<Int>) -> Unit) : RecyclerView.Adapter<TodoAdapter.ViewHolder>() {
-
-    var deleteActionMode = DeleteActionModeCallback(null, false, hashMapOf(), deleteTodoListener, this as RecyclerView.Adapter<RecyclerView.ViewHolder>)
+                  private val deleteTodoListener: (Todo) -> Unit) : RecyclerView.Adapter<TodoAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        fun bind(todo: Todo, changeListener: ((Todo) -> Unit)?) {
+        fun bind(todo: Todo, changeListener: ((Todo) -> Unit)?, deleteTodoListener: (Todo) -> Unit) {
             itemView.check_box_task.isChecked = todo.done
             if (todo.done) {
-                itemView.text_view_task.text = todo.todoText.capitalize()
+                itemView.text_view_task.text = todo.todoText
                 itemView.text_view_task.paintFlags = (Paint.STRIKE_THRU_TEXT_FLAG)
+                itemView.image_button_delete.visibility = View.VISIBLE
             } else {
-                itemView.text_view_task.text = todo.todoText.capitalize()
+                itemView.text_view_task.text = todo.todoText
                 itemView.text_view_task.paintFlags = 0
+                itemView.image_button_delete.visibility = View.GONE
             }
             itemView.check_box_task.setOnCheckedChangeListener { _, _ ->
                 changeListener?.invoke(todo)
             }
-            update(adapterPosition)
-        }
-
-        private fun selectItem(item: Int) {
-            if (deleteActionMode.multiSelect) {
-                if (deleteActionMode.selectedItems.containsKey(item)) {
-                    deleteActionMode.selectedItems.remove(item)
-                    itemView.setBackgroundColor(Color.TRANSPARENT)
-                } else {
-                    deleteActionMode.selectedItems[item] = items[item]
-                    itemView.setBackgroundColor(Color.LTGRAY)
-                }
+            itemView.text_view_task.setOnClickListener {
+                itemView.check_box_task.isChecked = !todo.done
             }
-        }
-
-        private fun update(value: Int) {
-            if (deleteActionMode.selectedItems.containsKey(value)) {
-                itemView.setBackgroundColor(Color.LTGRAY)
-            } else {
-                itemView.setBackgroundColor(Color.TRANSPARENT)
-            }
-            itemView.setOnLongClickListener {
-                deleteActionMode.actionMode = (it.context as AppCompatActivity).startSupportActionMode(deleteActionMode)
-                selectItem(value)
-                true
-            }
-            itemView.setOnClickListener {
-                if (deleteActionMode.actionMode == null) itemView.check_box_task.isChecked = !itemView.check_box_task.isChecked else selectItem(value)
+            itemView.image_button_delete.setOnClickListener {
+                deleteTodoListener.invoke(todo)
             }
         }
     }
@@ -69,7 +42,7 @@ class TodoAdapter(val items: MutableList<Todo>,
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(items[position], changeListener)
+        holder.bind(items[position], changeListener, deleteTodoListener)
     }
 
     override fun getItemCount() = items.size
