@@ -119,9 +119,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun onItemDeleted(item: Todo) {
         deleteTodo(item)
-        snackBar(main_layout, "${item.todoText} deleted", "UNDO") {
+        snackBar(main_layout, "\"${item.todoText}\" has been deleted.", resources.getString(R.string.undo)) {
             undoDeleteTodo()
-            getTodo()
         }
     }
 

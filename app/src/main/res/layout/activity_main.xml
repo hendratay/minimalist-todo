@@ -24,7 +24,6 @@
         android:id="@+id/toolbar_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:includeFontPadding="false"
         android:textSize="24sp"
         app:fontFamily="@font/montserrat"
         app:layout_constraintEnd_toEndOf="@+id/toolbar_day"
