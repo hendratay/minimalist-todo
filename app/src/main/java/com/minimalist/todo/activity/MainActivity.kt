@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
@@ -26,6 +27,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
+import android.graphics.Rect
+import android.os.Handler
 
 class MainActivity : AppCompatActivity() {
 
@@ -44,6 +47,23 @@ class MainActivity : AppCompatActivity() {
         setupTodoRecyclerView()
         setupAddTodo()
         getTodo()
+        hideEmptyViewWhenKeyboardShown()
+    }
+
+    private fun hideEmptyViewWhenKeyboardShown() {
+        main_layout.viewTreeObserver.addOnGlobalLayoutListener {
+            val rect = Rect()
+            main_layout.getWindowVisibleDisplayFrame(rect)
+            val screenHeight = main_layout.rootView.height
+            val keypadHeight = screenHeight - rect.bottom
+            if (keypadHeight > screenHeight * 0.15) {
+                empty_view.visibility = View.GONE
+            } else {
+                Handler().postDelayed({
+                    empty_view.visibility = if (todoList.isEmpty()) View.VISIBLE else View.GONE
+                }, 100)
+            }
+        }
     }
 
     override fun onResume() {
@@ -131,6 +151,7 @@ class MainActivity : AppCompatActivity() {
                 .subscribe { todo ->
                     todoList.clear()
                     todo.forEach { todoList.add(Todo(it.id, it.todo, it.done)) }
+                    empty_view.visibility = if (todoList.isEmpty()) View.VISIBLE else View.GONE
                     adapter.notifyDataSetChanged()
                 }
         compositeDisposable.add(disposable)

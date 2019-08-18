@@ -7,4 +7,6 @@
 
     <string name="input_todo">Enter Todo…</string>
     <string name="undo">Undo</string>
+    <string name="empty_title">So Bored</string>
+    <string name="empty_subtitle">Anything Todo ?</string>
 </resources>

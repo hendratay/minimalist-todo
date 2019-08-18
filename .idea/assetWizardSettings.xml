@@ -79,7 +79,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/opt/android-studio/plugins/android/lib/android.jar!/images/material_design_icons/navigation/ic_more_vert_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/opt/android-studio/plugins/android/lib/android.jar!/images/material_design_icons/social/ic_sentiment_neutral_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -89,9 +89,12 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_more_vert_black_24dp" />
+                            <entry key="color" value="eb5757" />
+                            <entry key="height" value="128" />
+                            <entry key="outputName" value="ic_sentiment_neutral_red_128dp" />
                             <entry key="overrideSize" value="true" />
                             <entry key="sourceFile" value="$USER_HOME$" />
+                            <entry key="width" value="128" />
                           </map>
                         </option>
                       </PersistentState>

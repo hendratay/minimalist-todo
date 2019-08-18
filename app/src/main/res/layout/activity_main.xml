@@ -29,7 +29,7 @@
         app:layout_constraintEnd_toEndOf="@+id/toolbar_day"
         app:layout_constraintStart_toStartOf="@+id/toolbar_day"
         app:layout_constraintTop_toBottomOf="@+id/toolbar_day"
-        tools:text="16 August 2019" />
+        tools:text="16th August 2019" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_todo"
@@ -40,6 +40,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar_date" />
+
+    <include
+        android:id="@+id/empty_view"
+        layout="@layout/empty_view"
+        android:visibility="gone" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -91,4 +96,5 @@
                 tools:ignore="ContentDescription" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.appcompat.widget.Toolbar>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
