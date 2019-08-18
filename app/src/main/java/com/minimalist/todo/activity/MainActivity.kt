@@ -2,8 +2,11 @@ package com.minimalist.todo.activity
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -18,6 +21,7 @@ import com.minimalist.todo.adapter.TodoAdapter
 import com.minimalist.todo.db.TodoDatabase
 import com.minimalist.todo.db.TodoEntity
 import com.minimalist.todo.model.Todo
+import com.minimalist.todo.utils.getOrdinalNumber
 import com.minimalist.todo.utils.snackBar
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -27,8 +31,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
-import android.graphics.Rect
-import android.os.Handler
 
 class MainActivity : AppCompatActivity() {
 
@@ -95,9 +97,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupToolbar() {
         val sdfDay = SimpleDateFormat("EEEE", Locale.US)
-        val sdfDate = SimpleDateFormat("dd MMMM YYYY", Locale.US)
-        toolbar_day.text = sdfDay.format(Date())
-        toolbar_date.text = sdfDate.format(Date())
+        val ordinalNumber = getOrdinalNumber(Calendar.getInstance().get(Calendar.DAY_OF_MONTH))
+        val sdfDate = SimpleDateFormat("dd'$ordinalNumber' MMMM YYYY", Locale.US)
+        toolbar_day.text = sdfDay.format(Calendar.getInstance().time)
+        toolbar_date.text = sdfDate.format(Calendar.getInstance().time)
         toolbar.overflowIcon = ContextCompat.getDrawable(this, R.drawable.ic_more_vert_black_24dp)
         setSupportActionBar(toolbar)
     }
