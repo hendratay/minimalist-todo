@@ -7,12 +7,15 @@ import android.widget.RemoteViewsService
 import com.minimalist.todo.App
 import com.minimalist.todo.R
 import com.minimalist.todo.db.TodoDatabase
+import com.minimalist.todo.db.TodoEntity
 import com.minimalist.todo.model.Todo
 import javax.inject.Inject
+import androidx.core.content.res.ResourcesCompat
 
-class TodoRemoteViewsFactory(val context: Context, val intent: Intent?): RemoteViewsService.RemoteViewsFactory {
+class TodoRemoteViewsFactory(private val context: Context, val intent: Intent?) : RemoteViewsService.RemoteViewsFactory {
 
-    @Inject lateinit var database : TodoDatabase
+    @Inject
+    lateinit var database: TodoDatabase
 
     companion object {
         var widgetList: MutableList<Todo> = ArrayList()
@@ -20,7 +23,6 @@ class TodoRemoteViewsFactory(val context: Context, val intent: Intent?): RemoteV
 
     override fun onCreate() {
         App.component.inject(this)
-        updateWidgetListView()
     }
 
     override fun getLoadingView(): RemoteViews? {
@@ -32,7 +34,9 @@ class TodoRemoteViewsFactory(val context: Context, val intent: Intent?): RemoteV
     }
 
     override fun onDataSetChanged() {
-        updateWidgetListView()
+        val todo = database.todoDao().getTodo().blockingFirst() as MutableList<TodoEntity>
+        widgetList.clear()
+        todo.forEach{ widgetList.add(Todo(it.id, it.todo, it.done))}
     }
 
     override fun hasStableIds(): Boolean {
@@ -60,16 +64,6 @@ class TodoRemoteViewsFactory(val context: Context, val intent: Intent?): RemoteV
 
     override fun onDestroy() {
         widgetList.clear()
-    }
-
-    private fun updateWidgetListView() {
-/*
-        database.todoDao().getTodo()
-                .subscribe {
-                    widgetList.clear()
-                    it.forEach { widgetList.add(Todo(it.id, it.todo, it.done)) }
-                }
-*/
     }
 
 }
