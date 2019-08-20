@@ -75,6 +75,11 @@ class MainActivity : AppCompatActivity() {
         edit_text_todo.requestFocus()
     }
 
+    override fun onPause() {
+        super.onPause()
+        updateWidget()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         compositeDisposable.dispose()

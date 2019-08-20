@@ -58,8 +58,8 @@ class TodoRemoteViewsFactory(private val context: Context, val intent: Intent?) 
         deleteIntent.putExtra(TodoWidget.EXTRA_ITEM, position)
         deleteIntent.putExtra(TodoWidget.ACTION, TodoWidget.DELETE_ACTION)
         remoteViews.setOnClickFillInIntent(R.id.appwidget_list_item_delete, deleteIntent)
-        remoteViews.setTextViewText(R.id.appwidget_list_item_text, widgetList[position].todoText)
         // ui
+        remoteViews.setTextViewText(R.id.appwidget_list_item_text, widgetList[position].todoText)
         if (widgetList[position].done) {
             remoteViews.setImageViewResource(R.id.appwidget_list_item_check_box, R.drawable.ic_check_box_green_24dp)
             remoteViews.setInt(R.id.appwidget_list_item_text, "setPaintFlags", Paint.STRIKE_THRU_TEXT_FLAG)
