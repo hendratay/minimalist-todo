@@ -1,44 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/image_view_empty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:src="@drawable/ic_sentiment_neutral_red_128dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.35"
         tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/text_view_empty_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/image_view_empty"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="8dp"
         android:fontFamily="@font/montserrat"
         android:text="@string/empty_title"
         android:textColor="@android:color/black"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="@+id/image_view_empty"
-        app:layout_constraintStart_toStartOf="@+id/image_view_empty"
-        app:layout_constraintTop_toBottomOf="@+id/image_view_empty" />
+        android:textSize="24sp" />
 
     <TextView
         android:id="@+id/text_view_empty_subtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/text_view_empty_title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="24dp"
         android:fontFamily="@font/montserrat"
         android:text="@string/empty_subtitle"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="@+id/text_view_empty_title"
-        app:layout_constraintStart_toStartOf="@+id/text_view_empty_title"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_empty_title" />
+        android:textSize="20sp" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

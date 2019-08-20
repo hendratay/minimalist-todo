@@ -69,6 +69,9 @@ class TodoWidget : AppWidgetProvider() {
 
             val views = RemoteViews(context.packageName, R.layout.widget_todo)
 
+            // ui empty view
+            views.setEmptyView(R.id.appwidget_list_view, R.id.appwidget_empty_view)
+
             // add button
             val taskIntent = Intent(context, MainActivity::class.java)
             val pendingIntent = PendingIntent.getActivity(context, 0, taskIntent, PendingIntent.FLAG_CANCEL_CURRENT)
