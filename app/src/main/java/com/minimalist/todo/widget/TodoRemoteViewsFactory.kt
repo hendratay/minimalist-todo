@@ -2,6 +2,8 @@ package com.minimalist.todo.widget
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Paint
+import android.view.View
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 import com.minimalist.todo.App
@@ -10,7 +12,6 @@ import com.minimalist.todo.db.TodoDatabase
 import com.minimalist.todo.db.TodoEntity
 import com.minimalist.todo.model.Todo
 import javax.inject.Inject
-import androidx.core.content.res.ResourcesCompat
 
 class TodoRemoteViewsFactory(private val context: Context, val intent: Intent?) : RemoteViewsService.RemoteViewsFactory {
 
@@ -46,10 +47,28 @@ class TodoRemoteViewsFactory(private val context: Context, val intent: Intent?) 
     override fun getViewAt(position: Int): RemoteViews {
         val remoteViews = RemoteViews(context.packageName, R.layout.widget_item_todo)
 
-        val fillIntent = Intent()
-        fillIntent.putExtra(TodoWidget.EXTRA_ITEM, position)
-        remoteViews.setOnClickFillInIntent(R.id.appwidget_list_item, fillIntent)
-        remoteViews.setTextViewText(R.id.appwidget_list_item_text, widgetList[position].todoText.capitalize())
+        // update
+        val updateIntent = Intent()
+        updateIntent.putExtra(TodoWidget.EXTRA_ITEM, position)
+        updateIntent.putExtra(TodoWidget.ACTION, TodoWidget.UPDATE_ACTION)
+        remoteViews.setOnClickFillInIntent(R.id.appwidget_list_item_check_box, updateIntent)
+        remoteViews.setOnClickFillInIntent(R.id.appwidget_list_item_text, updateIntent)
+        // delete
+        val deleteIntent = Intent()
+        deleteIntent.putExtra(TodoWidget.EXTRA_ITEM, position)
+        deleteIntent.putExtra(TodoWidget.ACTION, TodoWidget.DELETE_ACTION)
+        remoteViews.setOnClickFillInIntent(R.id.appwidget_list_item_delete, deleteIntent)
+        remoteViews.setTextViewText(R.id.appwidget_list_item_text, widgetList[position].todoText)
+        // ui
+        if (widgetList[position].done) {
+            remoteViews.setImageViewResource(R.id.appwidget_list_item_check_box, R.drawable.ic_check_box_green_24dp)
+            remoteViews.setInt(R.id.appwidget_list_item_text, "setPaintFlags", Paint.STRIKE_THRU_TEXT_FLAG)
+            remoteViews.setViewVisibility(R.id.appwidget_list_item_delete, View.VISIBLE)
+        } else {
+            remoteViews.setImageViewResource(R.id.appwidget_list_item_check_box, R.drawable.ic_check_box_outline_blank_green_24dp)
+            remoteViews.setInt(R.id.appwidget_list_item_text, "setPaintFlags", 0)
+            remoteViews.setViewVisibility(R.id.appwidget_list_item_delete, View.INVISIBLE)
+        }
 
         return remoteViews
     }
