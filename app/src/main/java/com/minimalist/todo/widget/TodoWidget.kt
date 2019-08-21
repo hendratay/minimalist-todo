@@ -6,17 +6,14 @@ import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
-import com.minimalist.todo.App
+import androidx.room.Room
 import com.minimalist.todo.R
-import com.minimalist.todo.activity.MainActivity
 import com.minimalist.todo.db.TodoDatabase
 import com.minimalist.todo.db.TodoEntity
 import io.reactivex.Single
-import javax.inject.Inject
 
 class TodoWidget : AppWidgetProvider() {
 
-    @Inject
     lateinit var database: TodoDatabase
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
@@ -33,7 +30,9 @@ class TodoWidget : AppWidgetProvider() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
         super.onReceive(context, intent)
-        App.component.inject(this)
+        if (context != null) {
+            database = Room.databaseBuilder(context, TodoDatabase::class.java, "todo.db").allowMainThreadQueries().build()
+        }
         if (intent?.action == UPDATE_ACTION) {
             val action = intent.getStringExtra(ACTION)
             val viewIndex = intent.getIntExtra(EXTRA_ITEM, 0)
@@ -72,10 +71,12 @@ class TodoWidget : AppWidgetProvider() {
             // ui empty view
             views.setEmptyView(R.id.appwidget_list_view, R.id.appwidget_empty_view)
 
+/*
             // add button
             val taskIntent = Intent(context, MainActivity::class.java)
             val pendingIntent = PendingIntent.getActivity(context, 0, taskIntent, PendingIntent.FLAG_CANCEL_CURRENT)
             views.setOnClickPendingIntent(R.id.appwidget_button, pendingIntent)
+*/
 
             // listview adapter
             val intent = Intent(context, TodoRemoteViewsService::class.java)

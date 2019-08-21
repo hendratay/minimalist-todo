@@ -6,16 +6,14 @@ import android.graphics.Paint
 import android.view.View
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
-import com.minimalist.todo.App
+import androidx.room.Room
 import com.minimalist.todo.R
 import com.minimalist.todo.db.TodoDatabase
 import com.minimalist.todo.db.TodoEntity
 import com.minimalist.todo.model.Todo
-import javax.inject.Inject
 
 class TodoRemoteViewsFactory(private val context: Context, val intent: Intent?) : RemoteViewsService.RemoteViewsFactory {
 
-    @Inject
     lateinit var database: TodoDatabase
 
     companion object {
@@ -23,7 +21,7 @@ class TodoRemoteViewsFactory(private val context: Context, val intent: Intent?) 
     }
 
     override fun onCreate() {
-        App.component.inject(this)
+        database = Room.databaseBuilder(context, TodoDatabase::class.java, "todo.db").allowMainThreadQueries().build()
     }
 
     override fun getLoadingView(): RemoteViews? {
