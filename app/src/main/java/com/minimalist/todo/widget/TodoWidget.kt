@@ -8,6 +8,7 @@ import android.content.Intent
 import android.widget.RemoteViews
 import androidx.room.Room
 import com.minimalist.todo.R
+import com.minimalist.todo.activity.MainActivity
 import com.minimalist.todo.db.TodoDatabase
 import com.minimalist.todo.db.TodoEntity
 import io.reactivex.Single
@@ -71,13 +72,6 @@ class TodoWidget : AppWidgetProvider() {
             // ui empty view
             views.setEmptyView(R.id.appwidget_list_view, R.id.appwidget_empty_view)
 
-/*
-            // add button
-            val taskIntent = Intent(context, MainActivity::class.java)
-            val pendingIntent = PendingIntent.getActivity(context, 0, taskIntent, PendingIntent.FLAG_CANCEL_CURRENT)
-            views.setOnClickPendingIntent(R.id.appwidget_button, pendingIntent)
-*/
-
             // listview adapter
             val intent = Intent(context, TodoRemoteViewsService::class.java)
             views.setRemoteAdapter(R.id.appwidget_list_view, intent)
@@ -91,9 +85,13 @@ class TodoWidget : AppWidgetProvider() {
                     PendingIntent.FLAG_UPDATE_CURRENT)
             views.setPendingIntentTemplate(R.id.appwidget_list_view, updatePendingIntent)
 
+            // input edit text
+            val inputIntent = Intent(context, MainActivity::class.java)
+            val pendingIntent = PendingIntent.getActivity(context, 0, inputIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+            views.setOnClickPendingIntent(R.id.appwidget_edit_text, pendingIntent)
+
             appWidgetManager.updateAppWidget(appWidgetId, views)
         }
-
     }
 
 }

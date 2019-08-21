@@ -2,13 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="horizontal">
 
     <ImageButton
         android:id="@+id/appwidget_list_item_check_box"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:layout_margin="4dp"
         android:layout_weight="1"
         android:background="@android:color/transparent"
@@ -19,21 +20,28 @@
         android:id="@+id/appwidget_list_item_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="4dp"
         android:layout_weight="8"
-        android:textColor="@android:color/black"
-        android:textSize="16sp"
+        android:fontFamily="serif-monospace"
+        android:textSize="20sp"
+        android:textStyle="bold"
         tools:text="Create an app" />
 
     <ImageButton
         android:id="@+id/appwidget_list_item_delete"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:layout_margin="4dp"
         android:layout_weight="1"
         android:background="@android:color/transparent"
         android:src="@drawable/ic_delete_forever_red_24dp"
-        android:visibility="invisible"
+        android:visibility="visible"
         tools:ignore="ContentDescription" />
 
 </LinearLayout>

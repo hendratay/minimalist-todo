@@ -50,7 +50,6 @@ class MainActivity : AppCompatActivity() {
         setupToolbar()
         setupTodoRecyclerView()
         setupAddTodo()
-        getTodo()
         hideEmptyViewWhenKeyboardShown()
     }
 
@@ -72,6 +71,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        getTodo()
         edit_text_todo.requestFocus()
     }
 
