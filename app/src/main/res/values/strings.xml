@@ -9,4 +9,6 @@
     <string name="undo">Undo</string>
     <string name="empty_title">So Bored</string>
     <string name="empty_subtitle">Anything Todo ?</string>
+    <string name="widget_empty_title">N O T H I N G</string>
+    <string name="widget_empty_subtitle">. . .</string>
 </resources>
