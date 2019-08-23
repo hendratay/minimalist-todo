@@ -15,10 +15,7 @@ import com.minimalist.todo.model.Todo
 class TodoRemoteViewsFactory(private val context: Context, val intent: Intent?) : RemoteViewsService.RemoteViewsFactory {
 
     lateinit var database: TodoDatabase
-
-    companion object {
-        var widgetList: MutableList<Todo> = ArrayList()
-    }
+    private var widgetList: MutableList<Todo> = ArrayList()
 
     override fun onCreate() {
         database = Room.databaseBuilder(context, TodoDatabase::class.java, "todo.db").allowMainThreadQueries().build()
@@ -33,9 +30,9 @@ class TodoRemoteViewsFactory(private val context: Context, val intent: Intent?) 
     }
 
     override fun onDataSetChanged() {
-        val todo = database.todoDao().getTodo().blockingFirst() as MutableList<TodoEntity>
         widgetList.clear()
-        todo.forEach{ widgetList.add(Todo(it.id, it.todo, it.done))}
+        val todo = database.todoDao().getTodo().blockingFirst() as MutableList<TodoEntity>
+        todo.forEach { widgetList.add(Todo(it.id, it.todo, it.done)) }
     }
 
     override fun hasStableIds(): Boolean {
@@ -47,13 +44,13 @@ class TodoRemoteViewsFactory(private val context: Context, val intent: Intent?) 
 
         // update
         val updateIntent = Intent()
-        updateIntent.putExtra(TodoWidget.EXTRA_ITEM, position)
+        updateIntent.putExtra(TodoWidget.EXTRA_ITEM, widgetList[position].todoId)
         updateIntent.putExtra(TodoWidget.ACTION, TodoWidget.UPDATE_ACTION)
         remoteViews.setOnClickFillInIntent(R.id.appwidget_list_item_check_box, updateIntent)
         remoteViews.setOnClickFillInIntent(R.id.appwidget_list_item_text, updateIntent)
         // delete
         val deleteIntent = Intent()
-        deleteIntent.putExtra(TodoWidget.EXTRA_ITEM, position)
+        deleteIntent.putExtra(TodoWidget.EXTRA_ITEM, widgetList[position].todoId)
         deleteIntent.putExtra(TodoWidget.ACTION, TodoWidget.DELETE_ACTION)
         remoteViews.setOnClickFillInIntent(R.id.appwidget_list_item_delete, deleteIntent)
         // ui
@@ -81,6 +78,7 @@ class TodoRemoteViewsFactory(private val context: Context, val intent: Intent?) 
 
     override fun onDestroy() {
         widgetList.clear()
+        database.close()
     }
 
 }

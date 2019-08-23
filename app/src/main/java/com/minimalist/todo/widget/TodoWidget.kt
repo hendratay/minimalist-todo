@@ -21,40 +21,38 @@ class TodoWidget : AppWidgetProvider() {
         for (appWidgetId in appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId)
         }
-    }
-
-    override fun onEnabled(context: Context) {
-    }
-
-    override fun onDisabled(context: Context) {
+        super.onUpdate(context, appWidgetManager, appWidgetIds)
     }
 
     override fun onReceive(context: Context?, intent: Intent?) {
-        super.onReceive(context, intent)
-        if (context != null) {
-            database = Room.databaseBuilder(context, TodoDatabase::class.java, "todo.db").allowMainThreadQueries().build()
-        }
-        if (intent?.action == UPDATE_ACTION) {
+        if (intent?.action == UPDATE_ACTION && context != null) {
             val action = intent.getStringExtra(ACTION)
-            val viewIndex = intent.getIntExtra(EXTRA_ITEM, 0)
-            val todo = TodoRemoteViewsFactory.widgetList[viewIndex]
-            if (action == UPDATE_ACTION) {
-                val entity = TodoEntity(todo.todoId, todo.todoText, !todo.done)
+            val todoId = intent.getLongExtra(EXTRA_ITEM, 0)
+
+            database = Room.databaseBuilder(context, TodoDatabase::class.java, "todo.db").allowMainThreadQueries().build()
+            if (action == TodoWidget.UPDATE_ACTION) {
+                val todo = database.todoDao().getTodo(todoId).blockingGet()
+                val entity = TodoEntity(todo.id, todo.todo, !todo.done)
                 Single.fromCallable { database.todoDao().updateTodo(entity) }.subscribe()
-            } else if (action == DELETE_ACTION) {
-                val entity = TodoEntity(todo.todoId, todo.todoText, todo.done)
+            } else if (action == TodoWidget.DELETE_ACTION) {
+                val todo = database.todoDao().getTodo(todoId).blockingGet()
+                val entity = TodoEntity(todo.id, todo.todo, todo.done)
                 Single.fromCallable { database.todoDao().deleteTodo(entity) }.subscribe()
             }
-            TodoRemoteViewsFactory.widgetList.removeAt(viewIndex)
+            database.close()
 
-            // notify widget adapter
             val appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
                     AppWidgetManager.INVALID_APPWIDGET_ID)
             AppWidgetManager.getInstance(context).notifyAppWidgetViewDataChanged(appWidgetId, R.id.appwidget_list_view)
+/*
+            // use this part if upper block doesn't work
+            val appWidgetManager = AppWidgetManager.getInstance(context)
+            val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(context,
+                    TodoWidget::class.java))
+            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.appwidget_list_view)
+*/
         }
-    }
-
-    override fun onDeleted(context: Context?, appWidgetIds: IntArray?) {
+        super.onReceive(context, intent)
     }
 
     companion object {

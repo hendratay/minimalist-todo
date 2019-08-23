@@ -83,6 +83,7 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         compositeDisposable.dispose()
+        database.close()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

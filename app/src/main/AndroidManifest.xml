@@ -37,6 +37,10 @@
                 android:value="com.minimalist.todo.activity.MainActivity" />
         </activity>
 
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
+
         <receiver android:name="com.minimalist.todo.widget.TodoWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -47,10 +51,6 @@
         </receiver>
         <service
             android:name="com.minimalist.todo.widget.TodoRemoteViewsService"
-            android:exported="false"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
-        <meta-data
-            android:name="preloaded_fonts"
-            android:resource="@array/preloaded_fonts" />
     </application>
 </manifest>
