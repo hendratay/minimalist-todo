@@ -34,8 +34,10 @@
         android:layout_marginBottom="8dp"
         android:layout_weight="8"
         android:fontFamily="serif-monospace"
-        android:textColor="@android:color/black"
+        android:gravity="center_vertical"
+        android:textColor="@android:color/darker_gray"
         android:textSize="20sp"
+        android:textStyle="bold"
         tools:text="Create an app" />
 
     <ImageButton

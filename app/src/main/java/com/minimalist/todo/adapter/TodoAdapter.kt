@@ -23,7 +23,7 @@ class TodoAdapter(private val items: MutableList<Todo>,
             } else {
                 itemView.text_view_task.text = todo.todoText
                 itemView.text_view_task.paintFlags = 0
-                itemView.image_button_delete.visibility = View.GONE
+                itemView.image_button_delete.visibility = View.INVISIBLE
             }
             itemView.check_box_task.setOnCheckedChangeListener { _, _ ->
                 changeListener?.invoke(todo)
