@@ -8,30 +8,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginBottom="8dp"
-        android:fontFamily="serif-monospace"
-        android:text="@string/widget_empty_subtitle"
-        android:textColor="@android:color/black"
-        android:textSize="24sp" />
-
-    <TextView
-        android:id="@+id/text_view_empty_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_marginBottom="48dp"
+        android:drawableTop="@drawable/pug_sleep"
+        android:drawablePadding="16dp"
         android:fontFamily="serif-monospace"
         android:gravity="center"
-        android:text="@string/widget_empty_title"
+        android:text="@string/empty_subtitle"
         android:textColor="@android:color/black"
-        android:textSize="24sp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:fontFamily="serif-monospace"
-        android:text="@string/widget_empty_subtitle"
-        android:textColor="@android:color/black"
-        android:textSize="24sp" />
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
 </LinearLayout>

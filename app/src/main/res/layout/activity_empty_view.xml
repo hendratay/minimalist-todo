@@ -9,7 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/ic_sentiment_neutral_red_128dp"
+        android:src="@drawable/pug_sleep"
         tools:ignore="ContentDescription" />
 
     <TextView
@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/image_view_empty"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:fontFamily="@font/montserrat"
         android:text="@string/empty_title"
         android:textColor="@android:color/black"
