@@ -62,7 +62,7 @@ class TodoRemoteViewsFactory(private val context: Context, val intent: Intent?) 
         } else {
             remoteViews.setImageViewResource(R.id.appwidget_list_item_check_box, R.drawable.ic_check_box_outline_blank_green_24dp)
             remoteViews.setInt(R.id.appwidget_list_item_text, "setPaintFlags", 0)
-            remoteViews.setViewVisibility(R.id.appwidget_list_item_delete, View.INVISIBLE)
+            remoteViews.setViewVisibility(R.id.appwidget_list_item_delete, View.GONE)
         }
 
         return remoteViews
