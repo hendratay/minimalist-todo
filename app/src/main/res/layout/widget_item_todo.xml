@@ -26,8 +26,8 @@
         android:layout_weight="8"
         android:fontFamily="serif-monospace"
         android:gravity="center_vertical"
-        android:textColor="@color/colorSubtext"
-        android:textSize="20sp"
+        android:textColor="@color/colorText"
+        android:textSize="16sp"
         android:textStyle="bold"
         tools:text="Create an app" />
 
