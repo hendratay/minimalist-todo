@@ -16,7 +16,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
+            android:background="@color/colorPrimary"
             app:title="@string/open_source_license" />
     </com.google.android.material.appbar.AppBarLayout>
 

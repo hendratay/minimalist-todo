@@ -5,6 +5,7 @@ import android.graphics.Typeface
 import android.util.TypedValue
 import android.view.View
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import com.google.android.material.snackbar.Snackbar
 import com.minimalist.todo.R
@@ -22,7 +23,7 @@ fun snackBar(view: View, message: CharSequence, action: CharSequence, listener: 
         }
         actionText.apply {
             setTypeface(ResourcesCompat.getFont(context, R.font.montserrat), Typeface.BOLD)
-            setTextColor(Color.parseColor("#6FCF97"))
+            setTextColor(ContextCompat.getColor(context, R.color.colorCheckBox))
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
         }
     }

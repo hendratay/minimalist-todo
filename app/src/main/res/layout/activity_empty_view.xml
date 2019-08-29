@@ -21,7 +21,7 @@
         android:layout_marginTop="16dp"
         android:fontFamily="@font/montserrat"
         android:text="@string/empty_title"
-        android:textColor="@android:color/black"
+        android:textColor="@color/colorText"
         android:textSize="24sp" />
 
     <TextView
@@ -33,6 +33,7 @@
         android:layout_marginBottom="24dp"
         android:fontFamily="@font/montserrat"
         android:text="@string/empty_subtitle"
+        android:textColor="@color/colorSubtext"
         android:textSize="20sp" />
 
 </RelativeLayout>

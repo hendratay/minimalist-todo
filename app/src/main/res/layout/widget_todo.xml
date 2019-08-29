@@ -1,7 +1,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="@color/colorPrimary">
 
     <TextView
         android:id="@+id/appwidget_text"
@@ -11,7 +11,7 @@
         android:layout_margin="16dp"
         android:fontFamily="serif-monospace"
         android:text="@string/app_name"
-        android:textColor="@android:color/black"
+        android:textColor="@color/colorText"
         android:textSize="24sp"
         android:textStyle="bold" />
 
@@ -41,7 +41,7 @@
         android:layout_margin="16dp"
         android:fontFamily="serif-monospace"
         android:text="@string/input_todo"
-        android:textColor="@android:color/black"
+        android:textColor="@color/colorText"
         android:textSize="20sp"
         android:textStyle="bold" />
 
