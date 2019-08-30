@@ -39,7 +39,6 @@ class TodoWidget : AppWidgetProvider() {
                 val entity = TodoEntity(todo.id, todo.todo, todo.done)
                 Single.fromCallable { database.todoDao().deleteTodo(entity) }.subscribe()
             }
-            database.close()
 
             val appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
                     AppWidgetManager.INVALID_APPWIDGET_ID)

@@ -78,7 +78,6 @@ class TodoRemoteViewsFactory(private val context: Context, val intent: Intent?) 
 
     override fun onDestroy() {
         widgetList.clear()
-        database.close()
     }
 
 }
