@@ -33,18 +33,21 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:28.0.0'
     implementation 'com.android.support:cardview-v7:28.0.0'
     implementation 'com.android.support:design:28.0.0'
-    implementation "com.mikepenz:aboutlibraries:6.1.1"
-    implementation 'com.google.android.gms:play-services-auth:17.0.0'
-    def daggerVer = 2.16
+    // rxjava
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
     implementation 'io.reactivex.rxjava2:rxjava:2.1.12'
-    implementation 'android.arch.persistence.room:rxjava2:1.1.1'
-    implementation 'android.arch.persistence.room:runtime:1.1.1'
-    kapt "android.arch.persistence.room:compiler:1.1.1"
-    implementation "com.google.dagger:dagger:$daggerVer"
-    implementation "com.google.dagger:dagger-android-support:$daggerVer"
-    kapt "com.google.dagger:dagger-compiler:$daggerVer"
-    kapt "com.google.dagger:dagger-android-processor:$daggerVer"
+    def roomVersion = 2.1
+    implementation "android.arch.persistence.room:rxjava2:$roomVersion"
+    implementation "android.arch.persistence.room:runtime:$roomVersion"
+    kapt "android.arch.persistence.room:compiler:$roomVersion"
+    def daggerVersion = 2.16
+    implementation "com.google.dagger:dagger:$daggerVersion"
+    implementation "com.google.dagger:dagger-android-support:$daggerVersion"
+    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
+    kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
+    // open source licenses
+    implementation "com.mikepenz:aboutlibraries:6.1.1"
+    // testing
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
 }
