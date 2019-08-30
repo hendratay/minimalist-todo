@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NavUtils
-import com.minimalist.todo.R
 import com.mikepenz.aboutlibraries.LibsBuilder
+import com.minimalist.todo.R
 import kotlinx.android.synthetic.main.activity_open_source_license.*
 
 class OpenSourceLicenseActivity : AppCompatActivity() {
@@ -31,7 +31,7 @@ class OpenSourceLicenseActivity : AppCompatActivity() {
     }
 
     private fun setupAboutLibraries() {
-        val fragment = LibsBuilder().supportFragment()
+        val fragment = LibsBuilder().withShowLoadingProgress(false).supportFragment()
         supportFragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit()
     }
 
