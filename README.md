@@ -1,11 +1,11 @@
-# What Todo
+# Minimalist Todo
 
 Todo app that build using ROOM architecture components as the database
 
 ### Todo
-- [ ] UI (Font)
+- [ ] Firebase as the database
+- [ ] Todo list sort
 - [ ] About Page
 - [ ] More Open Source Licenses
 - [ ] Attribution
 - [ ] Add License
-- [ ] Widget
