@@ -16,7 +16,6 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.minimalist.todo.App
 import com.minimalist.todo.R
 import com.minimalist.todo.adapter.TodoAdapter
 import com.minimalist.todo.db.TodoDatabase
@@ -32,21 +31,19 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
 
-    @Inject
-    lateinit var database: TodoDatabase
+    private var database: TodoDatabase? = null
     private val backup: MutableList<TodoEntity> = ArrayList()
     private lateinit var adapter: TodoAdapter
     private var todoList: MutableList<Todo> = ArrayList()
     private var compositeDisposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        App.component.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        database = TodoDatabase.getDatabase(this)
         setupToolbar()
         setupTodoRecyclerView()
         setupAddTodo()
@@ -80,9 +77,9 @@ class MainActivity : AppCompatActivity() {
         updateWidget()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        compositeDisposable.dispose()
+    override fun onStop() {
+        super.onStop()
+        compositeDisposable.clear()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -155,45 +152,60 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getTodo() {
-        val disposable = database.todoDao().getTodo()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { todo ->
-                    todoList.clear()
-                    todo.forEach { todoList.add(Todo(it.id, it.todo, it.done)) }
-                    empty_view.visibility = if (todoList.isEmpty()) View.VISIBLE else View.GONE
-                    adapter.notifyDataSetChanged()
-                }
-        compositeDisposable.add(disposable)
+        if (database != null) {
+            compositeDisposable.add(database!!.todoDao().getTodo()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe { todo ->
+                        todoList.clear()
+                        todo.forEach { todoList.add(Todo(it.id, it.todo, it.done)) }
+                        empty_view.visibility = if (todoList.isEmpty()) View.VISIBLE else View.GONE
+                        adapter.notifyDataSetChanged()
+                    })
+        }
     }
 
     private fun addTodo() {
-        if (edit_text_todo.text.isNotBlank()) {
-            database.todoDao().insertTodo(TodoEntity(edit_text_todo.text.toString(), false))
+        if (edit_text_todo.text.isNotBlank() && database != null) {
+            compositeDisposable.add(Single.fromCallable { database!!.todoDao().insertTodo(TodoEntity(edit_text_todo.text.toString(), false)) }
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe())
             edit_text_todo.text.clear()
         }
     }
 
     private fun updateTodo(todo: Todo, done: Boolean) {
         val entity = TodoEntity(todo.todoId, todo.todoText, done)
-        Single.fromCallable { database.todoDao().updateTodo(entity) }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe()
+        if (database != null) {
+            compositeDisposable.add(Single.fromCallable { database!!.todoDao().updateTodo(entity) }
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe())
+        }
     }
 
     private fun deleteTodo(item: Todo) {
         backup.clear()
         val entity = TodoEntity(item.todoId, item.todoText, item.done)
         backup.add(entity)
-        Single.fromCallable { database.todoDao().deleteTodo(entity) }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe()
+        if (database != null) {
+            compositeDisposable.add(Single.fromCallable { database!!.todoDao().deleteTodo(entity) }
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe())
+        }
     }
 
     private fun undoDeleteTodo() {
-        backup.forEach { database.todoDao().insertTodo(it) }
+        if (database != null) {
+            backup.forEach {
+                compositeDisposable.add(Single.fromCallable { database!!.todoDao().insertTodo(it) }
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe())
+            }
+        }
     }
 
     private fun updateWidget() {

@@ -6,16 +6,14 @@ import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
-import androidx.room.Room
 import com.minimalist.todo.R
 import com.minimalist.todo.activity.MainActivity
 import com.minimalist.todo.db.TodoDatabase
 import com.minimalist.todo.db.TodoEntity
-import io.reactivex.Single
 
 class TodoWidget : AppWidgetProvider() {
 
-    lateinit var database: TodoDatabase
+    private var database: TodoDatabase? = null
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         for (appWidgetId in appWidgetIds) {
@@ -29,15 +27,17 @@ class TodoWidget : AppWidgetProvider() {
             val action = intent.getStringExtra(ACTION)
             val todoId = intent.getLongExtra(EXTRA_ITEM, 0)
 
-            database = Room.databaseBuilder(context, TodoDatabase::class.java, "todo.db").allowMainThreadQueries().build()
-            if (action == TodoWidget.UPDATE_ACTION) {
-                val todo = database.todoDao().getTodo(todoId).blockingGet()
-                val entity = TodoEntity(todo.id, todo.todo, !todo.done)
-                Single.fromCallable { database.todoDao().updateTodo(entity) }.subscribe()
-            } else if (action == TodoWidget.DELETE_ACTION) {
-                val todo = database.todoDao().getTodo(todoId).blockingGet()
-                val entity = TodoEntity(todo.id, todo.todo, todo.done)
-                Single.fromCallable { database.todoDao().deleteTodo(entity) }.subscribe()
+            database = TodoDatabase.getDatabase(context)
+            if (database != null) {
+                if (action == TodoWidget.UPDATE_ACTION) {
+                    val todo = database!!.todoDao().getTodo(todoId).blockingGet()
+                    val entity = TodoEntity(todo.id, todo.todo, !todo.done)
+                    database!!.todoDao().updateTodo(entity)
+                } else if (action == TodoWidget.DELETE_ACTION) {
+                    val todo = database!!.todoDao().getTodo(todoId).blockingGet()
+                    val entity = TodoEntity(todo.id, todo.todo, todo.done)
+                    database!!.todoDao().deleteTodo(entity)
+                }
             }
 
             val appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,

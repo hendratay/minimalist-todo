@@ -6,7 +6,6 @@ import android.graphics.Paint
 import android.view.View
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
-import androidx.room.Room
 import com.minimalist.todo.R
 import com.minimalist.todo.db.TodoDatabase
 import com.minimalist.todo.db.TodoEntity
@@ -14,11 +13,11 @@ import com.minimalist.todo.model.Todo
 
 class TodoRemoteViewsFactory(private val context: Context, val intent: Intent?) : RemoteViewsService.RemoteViewsFactory {
 
-    lateinit var database: TodoDatabase
+    private var database: TodoDatabase? = null
     private var widgetList: MutableList<Todo> = ArrayList()
 
     override fun onCreate() {
-        database = Room.databaseBuilder(context, TodoDatabase::class.java, "todo.db").allowMainThreadQueries().build()
+        database = TodoDatabase.getDatabase(context)
     }
 
     override fun getLoadingView(): RemoteViews? {
@@ -31,8 +30,10 @@ class TodoRemoteViewsFactory(private val context: Context, val intent: Intent?) 
 
     override fun onDataSetChanged() {
         widgetList.clear()
-        val todo = database.todoDao().getTodo().blockingFirst() as MutableList<TodoEntity>
-        todo.forEach { widgetList.add(Todo(it.id, it.todo, it.done)) }
+        if (database != null) {
+            val todo = database!!.todoDao().getTodo().blockingFirst() as MutableList<TodoEntity>
+            todo.forEach { widgetList.add(Todo(it.id, it.todo, it.done)) }
+        }
     }
 
     override fun hasStableIds(): Boolean {
