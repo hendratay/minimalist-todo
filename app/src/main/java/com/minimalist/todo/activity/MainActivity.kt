@@ -170,8 +170,9 @@ class MainActivity : AppCompatActivity() {
             compositeDisposable.add(Single.fromCallable { database!!.todoDao().insertTodo(TodoEntity(edit_text_todo.text.toString(), false)) }
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe())
-            edit_text_todo.text.clear()
+                    .subscribe { _ ->
+                        edit_text_todo.text.clear()
+                    })
         }
     }
 
