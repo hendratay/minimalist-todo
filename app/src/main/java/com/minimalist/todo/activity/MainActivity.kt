@@ -102,7 +102,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupToolbar() {
         val sdfDay = SimpleDateFormat("EEEE", Locale.US)
         val ordinalNumber = getOrdinalNumber(Calendar.getInstance().get(Calendar.DAY_OF_MONTH))
-        val sdfDate = SimpleDateFormat("dd'$ordinalNumber' MMMM YYYY", Locale.US)
+        val sdfDate = SimpleDateFormat("d'$ordinalNumber' MMMM YYYY", Locale.US)
         toolbar_day.text = sdfDay.format(Calendar.getInstance().time)
         toolbar_date.text = sdfDate.format(Calendar.getInstance().time)
         toolbar.overflowIcon = ContextCompat.getDrawable(this, R.drawable.ic_more_vert_black_24dp)
